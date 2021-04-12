@@ -1,0 +1,12 @@
+{
+  "name": "HelpReserve",
+  "displayName": "HelpReserve",
+  "expo": {
+    "name": "HelpReserve",
+    "slug": "HelpReserve",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
