@@ -1,20 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-
-const imgbg ='C:/HelpReserve/Imagens/bgtela.jpg'
+import { StyleSheet, Text, View, ImageBackground} from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source = {require(imgbg)}
-        style = {styles.imagemfundo}
-      >
+    <ImageBackground
+      source = {require('./Imagens/back.jpg')}
+      style = {styles.img}
+    >
+      
       <Text style={styles.title}>HelpReserve</Text>
       <Text>PUC Campinas</Text>
       <StatusBar style="auto" />
-      </ImageBackground>
+
+    </ImageBackground>
     </View>
   );
 }
@@ -27,14 +27,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  title:{
-    fontSize:35
+  img:{
+    flex: 1,
+    justifyContent: 'center',
+    resizeMode: 'cover',
+    width: '100%'
   },
 
-  imagemfundo:{
-    flex: 1,
-    resizeMode: "cover"
+  title:{
+    fontSize:35,
+    justifyContent: 'center'
   }
-
-
 });
