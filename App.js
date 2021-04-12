@@ -6,7 +6,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>HelpReserve</Text>
-      <Text>by Software Engeneering PUC Campinas</Text>
+      <Text>PUC Campinas</Text>
       <StatusBar style="auto" />
     </View>
   );
