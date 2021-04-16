@@ -4,6 +4,12 @@
   "expo": {
     "name": "HelpReserve",
     "slug": "HelpReserve",
+    "orientation": "1.0.0",
+    "splash":{
+      "image": "./assets/Splash2.png",
+      "resizeMode": "cover",
+      "background": "#000"
+    },
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"

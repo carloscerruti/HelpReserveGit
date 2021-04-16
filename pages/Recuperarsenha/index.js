@@ -8,32 +8,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
-export default function Signup({ navigation }) {
+export default function Recuperarsenha({ navigation }) {
     return (
         <View style={css.main_form}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
 
-                {/* <View>
-                <Image
-                  source={require('../assets/helpreserve.png')}
-                  style={css.logo_img} />
-                </View>*/}
-
                 <View style={css.login_form}>
-                    <TextInput
-                        placeholder='Nome Completo'
-                        style={css.signup_input} />
-                    <TextInput
-                        placeholder='Endereço'
-                        style={css.signup_input} />
-                    <TextInput
-                        placeholder='Telefone'
-                        keyboardType='numeric'
-                        style={css.signup_input} />
-                    <TextInput
-                        placeholder='CPF'
-                        keyboardType='numeric'
-                        style={css.signup_input} />
                     <TextInput
                         placeholder='Email'
                         textContentType='emailAddress'
@@ -42,23 +22,14 @@ export default function Signup({ navigation }) {
                         autoCorrect={false}
                         autoCompleteType='email'
                         style={css.login_input_email} />
-                    <TextInput
-                        placeholder='Senha'
-                        secureTextEntry={true}
-                        style={css.login_input_senha} />
-                    <TextInput
-                        placeholder='Digite novamente a senha'
-                        secureTextEntry={true}
-                        style={css.login_input_senha} />
 
-
+                    <TouchableOpacity style={css.senha_button}
+                        onPress={() => Alert.alert('Senha enviada para seu email. Verifique sua caixa de entrada!')}>
+                        <Text style={css.button_text}>Enviar</Text>
+                    </TouchableOpacity>
 
                 </View>
-                <TouchableOpacity style={css.login_button}>
-                    <Text style={css.button_text}
-                    onPress={() => Alert.alert('Usuário cadastrado com sucesso!')}>Cadastrar</Text>
 
-                </TouchableOpacity>
             </KeyboardAvoidingView>
         </View>
 
@@ -71,15 +42,6 @@ const css = StyleSheet.create({
         resizeMode: 'contain',
         alignItems: 'center'
     },
-    signup_input: {
-        backgroundColor: '#FFF',
-        fontSize: 15,
-        padding: 7,
-        marginTop: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
-    },
 
     login_msg_error: {
         fontWeight: 'bold',
@@ -91,18 +53,6 @@ const css = StyleSheet.create({
     login_form: {
         width: '80%',
         alignSelf: 'center',
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
-    },
-    login_input_senha: {
-        backgroundColor: '#FFF',
-        fontSize: 15,
-        padding: 7,
-        marginTop: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
     },
 
     login_input_email: {
@@ -115,7 +65,7 @@ const css = StyleSheet.create({
         borderRadius: 10,
     },
 
-    login_button: {
+    senha_button: {
         padding: 8,
         width: 200,
         height: 45,
