@@ -1,16 +1,40 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, Text, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
+import React, { Component, useState } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { cpf } from 'cpf-cnpj-validator';
+import { CheckBox, Text } from 'react-native-elements';
 
 const Stack = createStackNavigator();
 
 export default function Signup({ navigation }) {
+
+    const [nome, setNome] = useState(null)
+    const [endereco, setEndereco] = useState(null)
+    const [telefone, setTelefone] = useState(null)
+    const [cpf, setCPF] = useState(null)
+    const [email, setEmail] = useState(null)
+    const [password, setPassword] = useState(null)
+    const [password1, setPassword1] = useState(null)
+    const [isSelected, setSelected] = useState(false)
+
+    const salvar = () => {
+        /*console.log(nome)
+        console.log(endereco)
+        console.log(telefone)
+        console.log(cpf)
+        console.log(email)
+        console.log(password)
+        console.log(password1)*/
+        Alert.alert('Usuário cadastrado com sucesso!')
+    }
+
     return (
-        <View style={css.main_form}>
+        <View style={css.container}>
+            <Text style={css.cadastre_se}>Cadastre-se</Text>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
 
                 {/* <View>
@@ -22,43 +46,68 @@ export default function Signup({ navigation }) {
                 <View style={css.login_form}>
                     <TextInput
                         placeholder='Nome Completo'
+                        onChangeText={value => setNome(value)}
+                        returnKeyType="done"
                         style={css.signup_input} />
                     <TextInput
                         placeholder='Endereço'
+                        onChangeText={value => setEndereco(value)}
+                        returnKeyType="done"
                         style={css.signup_input} />
                     <TextInput
                         placeholder='Telefone'
-                        keyboardType='numeric'
+                        keyboardType='phone-pad'
+                        onChangeText={value => setTelefone(value)}
+                        returnKeyType="done"
                         style={css.signup_input} />
                     <TextInput
                         placeholder='CPF'
                         keyboardType='numeric'
+                        onChangeText={value => setCPF(value)}
+                        returnKeyType="done"
                         style={css.signup_input} />
                     <TextInput
-                        placeholder='Email'
+                        placeholder='E-mail'
                         textContentType='emailAddress'
                         keyboardType='email-address'
                         autoCapitalize='none'
                         autoCorrect={false}
                         autoCompleteType='email'
-                        style={css.login_input_email} />
+                        onChangeText={value => setEmail(value)}
+                        returnKeyType="done"
+                        style={css.signup_input} />
                     <TextInput
                         placeholder='Senha'
                         secureTextEntry={true}
-                        style={css.login_input_senha} />
+                        autoCapitalize='none'
+                        onChangeText={value => setPassword(value)}
+                        returnKeyType="done"
+                        style={css.signup_input} />
                     <TextInput
                         placeholder='Digite novamente a senha'
                         secureTextEntry={true}
-                        style={css.login_input_senha} />
+                        autoCapitalize='none'
+                        onChangeText={value => setPassword1(value)}
+                        returnKeyType="done"
+                        style={css.signup_input} />
 
 
+                    <CheckBox
+                        title="Eu aceito os termos de uso"
+                        checkedIcon="check"
+                        checkedColor="green"
+                        uncheckedColor="red"
+                        uncheckedIcon="square-o"
+                        checked={isSelected}
+                        onPress={() => setSelected(!isSelected)}
+                    />
 
                 </View>
                 <TouchableOpacity style={css.login_button}>
                     <Text style={css.button_text}
-                    onPress={() => Alert.alert('Usuário cadastrado com sucesso!')}>Cadastrar</Text>
-
+                        onPress={() => salvar()}>Cadastrar</Text>
                 </TouchableOpacity>
+
             </KeyboardAvoidingView>
         </View>
 
@@ -71,6 +120,14 @@ const css = StyleSheet.create({
         resizeMode: 'contain',
         alignItems: 'center'
     },
+
+    cadastre_se: {
+        fontSize: 30,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginTop: 15
+    },
+
     signup_input: {
         backgroundColor: '#FFF',
         fontSize: 15,
@@ -90,29 +147,7 @@ const css = StyleSheet.create({
     },
     login_form: {
         width: '80%',
-        alignSelf: 'center',
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
-    },
-    login_input_senha: {
-        backgroundColor: '#FFF',
-        fontSize: 15,
-        padding: 7,
-        marginTop: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
-    },
-
-    login_input_email: {
-        backgroundColor: '#FFF',
-        fontSize: 15,
-        padding: 7,
-        marginTop: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
+        alignSelf: 'center'
     },
 
     login_button: {
@@ -139,13 +174,14 @@ const css = StyleSheet.create({
         height: 150,
         alignSelf: 'center',
         resizeMode: 'contain',
-        marginTop: 120,
+        marginTop: 10,
     },
 
-    main_form: {
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
         justifyContent: 'center',
         resizeMode: 'cover',
-        marginTop: 25
     },
 
 });

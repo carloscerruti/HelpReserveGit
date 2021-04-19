@@ -1,14 +1,37 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, Text, View, Image, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { Component, useState } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import ImagePicker from 'react-native-image-picker';
+import { CheckBox, Text } from 'react-native-elements';
+import { createStackNavigator } from '@react-navigation/stack';
 
 
 export default function CadastroEstab({ navigation }) {
+
+    const [nomeEstab, setNomeEstab] = useState(null)
+    const [dono, setDono] = useState(null)
+    const [endereco, setEndereco] = useState(null)
+    const [telefone, setTelefone] = useState(null)
+    const [cnpj, setCNPJ] = useState(null)
+    const [email, setEmail] = useState(null)
+    const [password, setPassword] = useState(null)
+    const [password1, setPassword1] = useState(null)
+    const [isSelected, setSelected] = useState(false)
+
+    const escolherFoto = () => {
+        const options = {};
+        ImagePicker.launchImageLibrary(options, response => {
+            console.log("response", response);
+        });
+
+    }
+
+    const salvar = () => {
+        Alert.alert('Estabelecimento cadastrado com sucesso!')
+    }
+
     return (
         <View style={css.container}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
@@ -49,16 +72,24 @@ export default function CadastroEstab({ navigation }) {
                         style={css.login_input_senha} />
 
                     <TouchableOpacity style={css.estab_button}
-                        onPress={() => ImagePicker.launchImageLibrary()} >
-                        <Text style={css.estab_text}>Escolher imagem</Text>
+                        onPress={() => escolherFoto()} >
                     </TouchableOpacity>
 
+                    <CheckBox
+                        title="Eu aceito os termos de uso"
+                        checkedIcon="check"
+                        checkedColor="green"
+                        uncheckedColor="red"
+                        uncheckedIcon="square-o"
+                        checked={isSelected}
+                        onPress={() => setSelected(!isSelected)}
+                    />
 
 
                 </View>
                 <TouchableOpacity style={css.login_button}>
                     <Text style={css.button_text}
-                        onPress={() => Alert.alert('Estabelecimento cadastrado com sucesso!')}>Cadastrar</Text>
+                        onPress={() => salvar()}>Cadastrar</Text>
 
                 </TouchableOpacity>
             </KeyboardAvoidingView>
@@ -83,7 +114,7 @@ const css = StyleSheet.create({
         borderRadius: 10,
     },
 
-    estab_button:{
+    estab_button: {
         padding: 6,
         width: 80,
         height: 50,
@@ -95,7 +126,7 @@ const css = StyleSheet.create({
         borderWidth: 3,
     },
 
-    estab_text:{
+    estab_text: {
         fontWeight: 'bold',
         fontSize: 15,
         color: 'black',

@@ -26,7 +26,6 @@ export default function Home({ navigation }) {
 
 
   return (
-    <ImageBackground source = {require('./assets/back2.')}>
     <View style={css.container}>
      
     
@@ -88,7 +87,6 @@ export default function Home({ navigation }) {
 
         </View>
     </View>
-    </ImageBackground>
   );
 
 }
