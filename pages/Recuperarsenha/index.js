@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 
 export default function Recuperarsenha({ navigation }) {
     return (
-        <View style={css.main_form}>
+        <View style={css.container}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
 
                 <View style={css.login_form}>
@@ -27,6 +27,18 @@ export default function Recuperarsenha({ navigation }) {
                         onPress={() => Alert.alert('Senha enviada para seu email. Verifique sua caixa de entrada!')}>
                         <Text style={css.button_text}>Enviar</Text>
                     </TouchableOpacity>
+                    
+
+                    <Text style={css.ou}>
+                        OU
+                    </Text>
+
+                    <View>
+                        <Text style={css.click_senha}
+                            onPress={() => navigation.navigate('Signup')}>
+                            Criar nova conta
+                        </Text>
+                    </View>
 
                 </View>
 
@@ -41,6 +53,23 @@ const css = StyleSheet.create({
     lightbg: {
         resizeMode: 'contain',
         alignItems: 'center'
+    },
+
+    ou: {
+        color: 'grey',
+        fontWeight: 'bold',
+        marginTop: 15,
+        alignSelf: 'center',
+        fontSize: 22,
+
+    },
+
+    click_senha: {
+        color: 'red',
+        fontWeight: 'bold',
+        marginTop: 15,
+        alignSelf: 'center',
+        fontSize: 16,
     },
 
     login_msg_error: {
@@ -69,7 +98,7 @@ const css = StyleSheet.create({
         padding: 8,
         width: 200,
         height: 45,
-        marginTop: 35,
+        marginTop: 25,
         marginBottom: 15,
         backgroundColor: '#BF0404',
         alignItems: 'center',
@@ -92,10 +121,10 @@ const css = StyleSheet.create({
         marginTop: 120,
     },
 
-    main_form: {
+    container: {
+        flex: 1,
         justifyContent: 'center',
-        resizeMode: 'cover',
-        marginTop: 25
+        backgroundColor: '#fff'
     },
 
 });
