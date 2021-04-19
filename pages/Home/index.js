@@ -1,49 +1,68 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, Text, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
+import React, { Component, useState } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, Text, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
-const Stack = createStackNavigator();
+import { Input } from 'react-native-elements';
+import Signup from '../Signup';
 
 export default function Home({ navigation }) {
-  return (
-    <View style={css.main_form}>
-      <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
 
-        {/* <View>
+  const [email, setEmail] = useState(null)
+  const [password, setPassword] = useState(null)
+
+  const cadastrar = () =>{
+    navigation.navigate("Signup")
+  }
+
+  const entrar = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "HomeUser" }]
+    })
+  }
+
+
+  return (
+    <ImageBackground source = {require('./assets/back2.')}>
+    <View style={css.container}>
+     
+    
+        <View>
                 <Image
-                  source={require('../assets/helpreserve.png')}
+                  source={require('C:/HelpReserve/assets/helpreserve.png')}
                   style={css.logo_img} />
-        </View>*/}
+        </View>
 
         <View style={css.login_form}>
-          <TextInput
+          <Input
             placeholder='E-mail'
-            leftIcon={{type : 'font-awesome',name: 'envelope'}}
+            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
             textContentType='emailAddress'
             keyboardType='email-address'
             autoCapitalize='none'
             autoCorrect={false}
             autoCompleteType='email'
-            style={css.login_input_email} />
-          <TextInput
+            onChangeText={value => setEmail(value)} />
+          <Input
             placeholder='Senha'
             secureTextEntry={true}
-            style={css.login_input_senha} />
+            autoCapitalize='none'
+            onChangeText={value => setPassword(value)}
+            leftIcon={{ type: 'font-awesome', name: 'lock' }} />
 
           <TouchableOpacity style={css.login_button}
-            onPress={() => navigation.navigate('HomeUser')}>
+            onPress={() => entrar()}>
             <Text style={css.button_text}>Entrar</Text>
           </TouchableOpacity>
 
           <View source={css.view_cadastro}>
             <Text style={css.msg_cadastro}>Não é cadastrado?⠀
               <Text style={css.click_cadastro}
-                onPress={() => navigation.navigate('Signup')}>
-                Clique aqui!
+                onPress={() => cadastrar()}>
+                Cadastre-se
                 </Text>
             </Text>
           </View>
@@ -55,7 +74,7 @@ export default function Home({ navigation }) {
           </View>
 
           <View source={css.estab_container}>
-            <Text style={css.msg_cadastro}>
+            <Text style={css.msg_cadastro_estab}>
               Possui um estabelecimento?
               </Text>
 
@@ -68,8 +87,8 @@ export default function Home({ navigation }) {
           </View>
 
         </View>
-      </KeyboardAvoidingView>
     </View>
+    </ImageBackground>
   );
 
 }
@@ -82,10 +101,11 @@ const css = StyleSheet.create({
   estab_button: {
     width: 100,
     height: 30,
-    backgroundColor: '#F29F05',
+    backgroundColor: '#750606',
     alignItems: 'center',
-    alignSelf: 'center',
+    alignSelf:'center',
     borderRadius: 5,
+    marginTop: 10,
   },
 
   estab_button_text: {
@@ -97,7 +117,7 @@ const css = StyleSheet.create({
 
   estab_container: {
     flexDirection: 'row',
-    flex: 1,
+    justifyContent: 'space-between',
     borderColor: 'black',
     borderWidth: 2
   },
@@ -154,7 +174,15 @@ const css = StyleSheet.create({
   msg_cadastro: {
     color: 'black',
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
+    marginTop: 30,
+    alignSelf: 'center'
+  },
+
+  msg_cadastro_estab: {
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 'normal',
     marginTop: 30,
     alignSelf: 'center'
   },
@@ -164,7 +192,7 @@ const css = StyleSheet.create({
     height: 150,
     alignSelf: 'center',
     resizeMode: 'contain',
-    marginTop: 120,
+    marginTop: 10,
   },
 
   bg: {
@@ -195,10 +223,11 @@ const css = StyleSheet.create({
     fontSize: 15,
   },
 
-  main_form: {
-    resizeMode: 'contain',
-    borderColor:'black',
-    borderWidth:2
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
 });
