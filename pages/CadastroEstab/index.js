@@ -60,7 +60,6 @@ export default function CadastroEstab({ navigation }) {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 
-
         if (nomeEstab == null) {
             setErrorNomeEstab("Preencha o nome do estabelecimento")
             error = true
@@ -69,6 +68,13 @@ export default function CadastroEstab({ navigation }) {
         if (dono == null) {
             setErrorDono("Preencha o nome corretamente")
             error = true
+        }
+
+        if(dono != null) {
+            if(dono.length < 5) {
+            setErrorDono("Preencha o nome completo do dono")
+            error = true
+            }
         }
 
         if (endereco == null) {
@@ -81,10 +87,24 @@ export default function CadastroEstab({ navigation }) {
             error = true
         }
 
+        if (telefone != null) {
+            if (telefone.length < 14) {
+                setErrorTelefone("Preencha o telefone corretamente")
+                error = true
+            }
+        }
+
         if (cnpj == null || cnpjField.isValid()) {
             setErrorCNPJ("Preencha o CNPJ corretamente")
             error = true
 
+        }
+
+        if (cnpj != null) {
+            if(cnpj.length < 18){
+            setErrorCNPJ("Preencha o CNPJ corretamente")
+            error = true
+            }
         }
 
         if (!re.test(String(email).toLowerCase()) || email == null) {
@@ -97,15 +117,25 @@ export default function CadastroEstab({ navigation }) {
             error = true
         }
 
+        if (password != null) {
+            if(password.length < 8){
+            setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
+            error = true
+           }
+
+            else {
+                if (password != password1) {
+                setErrorCadastro("Senhas não correspondem")
+                error = true
+                }
+            }
+        }
+
         /*if (password.length >= 1 && password.length < 8) {
             setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
             error = true
         }*/
 
-        if (password != password1) {
-            setErrorCadastro("Senhas não correspondem")
-            error = true
-        }
 
         /*if(descricao == null){
             setErrorDescricao("Escreva um descrição")
@@ -143,7 +173,7 @@ export default function CadastroEstab({ navigation }) {
             keyboardVerticalOffset={5}>
             <ScrollView >
                 <Text style={css.cadastro}>Cadastro de Estabelecimento</Text>
-                <View style={css.containerFundo}>
+                
                     <View style={css.login_form}>
                         <Input
                             placeholder='Nome do estabelecimento'
@@ -175,7 +205,7 @@ export default function CadastroEstab({ navigation }) {
 
                         <View style={css.containerMask}>
                             <TextInputMask
-                                placeholder="Telefone"
+                                placeholder="Celular ou Telefone"
                                 type={'cel-phone'}
                                 value={telefone}
                                 keyboardType="number-pad"
@@ -287,7 +317,7 @@ export default function CadastroEstab({ navigation }) {
                         <Text style={css.button_text}
                         >Cadastrar</Text>
                     </TouchableOpacity>
-                </View>
+                
             </ScrollView>
         </KeyboardAvoidingView>
 
@@ -388,12 +418,6 @@ const css = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'center',
-    },
-
-    containerFundo: {
-        borderBottomWidth: 2,
-        borderColor: 'black',
-        borderRadius: 3,
     },
 
 });

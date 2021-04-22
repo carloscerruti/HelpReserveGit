@@ -36,7 +36,7 @@ export default function Home({ navigation }) {
     
     Animated.parallel([
       Animated.timing(logo.x, {
-        toValue: 55,
+        toValue: 120,
         duration: 100,
       }),
       Animated.timing(logo.y, {
@@ -94,6 +94,8 @@ export default function Home({ navigation }) {
 
   const entrar = () => {
     if (validar()) {
+      console.log(email)
+      console.log(password)
       navigation.reset({
         index: 0,
         routes: [{ name: "HomeUser" }]
@@ -112,13 +114,13 @@ export default function Home({ navigation }) {
             width: logo.x,
             height: logo.y,
           }}
-          source={require('C:/HelpReserve/assets/helpreserve.png')} />
+          source={require('../../assets/helpreserve.png')} />
       </View>
 
 
       <Animated.View
         style={[
-          css.container, css.login_form,
+          css.login_form,
           {
             opacity: opacity,
             transform: [

@@ -7,7 +7,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CheckBox, Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
-import { launchCamera } from 'react-native-image-picker';
 
 const Stack = createStackNavigator();
 
@@ -51,6 +50,13 @@ export default function Signup({ navigation }) {
             error = true
         }
 
+        if (nome != null) {
+            if (nome.length < 5) {
+                setErrorNome("Preencha o nome corretamente")
+                error = true
+            }
+        }
+
         if (endereco == null) {
             setErrorEndereco("Preencha seu endereço corretamente")
             error = true
@@ -61,12 +67,24 @@ export default function Signup({ navigation }) {
             error = true
         }
 
+        if (telefone != null) {
+            if (telefone.length < 14) {
+                setErrorTelefone("Preencha o telefone corretamente")
+                error = true
+            }
+        }
+
         if (cpf == null || cpfField.isValid()) {
             setErrorCPF("Preencha seu CPF corretamente")
             error = true
-            
         }
 
+        if (cpf != null) {
+            if(cpf.length < 14){
+            setErrorCPF("Preencha o CPF corretamente")
+            error = true
+            }
+        }
 
         if (!re.test(String(email).toLowerCase()) || email == null) {
             setErrorEmail("Preencha seu e-mail corretamente")
@@ -78,14 +96,18 @@ export default function Signup({ navigation }) {
             error = true
         }
 
-        /*if (password.length >= 1 && password.length < 8) {
+        if (password != null) {
+            if(password.length < 8){
             setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
             error = true
-        }*/
+           }
 
-        if (password != password1) {
-            setErrorCadastro("Senhas não correspondem")
-            error = true
+            else {
+                if (password != password1) {
+                setErrorCadastro("Senhas não correspondem")
+                error = true
+                }
+            }
         }
 
         return !error
