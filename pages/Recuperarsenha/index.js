@@ -1,49 +1,82 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, Text, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { Component, useState } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
+import { Input, Text } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const Stack = createStackNavigator();
 
 export default function Recuperarsenha({ navigation }) {
+    const [email, setEmail] = useState(null)
+    const [errorEmail, setErrorEmail] = useState(null)
+
+    const validar = () => {
+        let error = false
+        setErrorEmail(null)
+
+
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+        if (!re.test(String(email).toLowerCase()) || email == null) {
+            setErrorEmail("Email Inválido")
+            error = true
+        }
+
+        return !error
+    }
+
+    const validacao = () => {
+        if (validar()) {
+            console.log(email)
+            Alert.alert("Senha enviada para seu endereço de email")
+        }
+    }
+
+    const cadastro = () => {
+        navigation.navigate("Signup")
+    }
+
     return (
-        <View style={css.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : 'height'}
+            style={[css.lightbg, css.container]}>
 
-                <View style={css.login_form}>
-                    <TextInput
-                        placeholder='Email'
-                        textContentType='emailAddress'
-                        keyboardType='email-address'
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        autoCompleteType='email'
-                        style={css.login_input_email} />
+            <Text style={css.recup_senha}>Recuperar Senha</Text>
+            <View style={css.login_form}>
+                <Input
+                    placeholder='E-mail'
+                    leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+                    textContentType='emailAddress'
+                    keyboardType='email-address'
+                    autoCapitalize='none'
+                    autoCompleteType='email'
+                    onChangeText={value => {
+                        setEmail(value)
+                        setErrorEmail(null)
+                    }
+                    }
+                    errorMessage={errorEmail} />
 
-                    <TouchableOpacity style={css.senha_button}
-                        onPress={() => Alert.alert('Senha enviada para seu email. Verifique sua caixa de entrada!')}>
-                        <Text style={css.button_text}>Enviar</Text>
-                    </TouchableOpacity>
-                    
+                <TouchableOpacity style={css.senha_button}
+                    onPress={() => validacao()}>
+                    <Text style={css.button_text}>Enviar</Text>
+                </TouchableOpacity>
 
-                    <Text style={css.ou}>
-                        OU
-                    </Text>
 
-                    <View>
-                        <Text style={css.click_senha}
-                            onPress={() => navigation.navigate('Signup')}>
-                            Criar nova conta
+                <Text style={css.ou}>
+                    OU
                         </Text>
-                    </View>
 
+
+                <View>
+                    <Text style={css.click_senha}
+                        onPress={() => cadastro()}>
+                        Criar nova conta
+                        </Text>
                 </View>
 
-            </KeyboardAvoidingView>
-        </View>
+            </View>
+        </KeyboardAvoidingView>
 
     );
 
@@ -51,8 +84,15 @@ export default function Recuperarsenha({ navigation }) {
 
 const css = StyleSheet.create({
     lightbg: {
-        resizeMode: 'contain',
-        alignItems: 'center'
+        backgroundColor: '#fff',
+    },
+
+    recup_senha: {
+        fontSize: 30,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        marginBottom: 35,
+
     },
 
     ou: {
@@ -124,6 +164,7 @@ const css = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#fff'
     },
 

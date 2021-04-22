@@ -29,6 +29,7 @@
     "react-native-hide-show-password-input": "^1.2.0",
     "react-native-image-picker": "^3.3.2",
     "react-native-mask-cpf-cnpj": "^2.0.3",
+    "react-native-masked-text": "^1.13.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "~2.15.0",

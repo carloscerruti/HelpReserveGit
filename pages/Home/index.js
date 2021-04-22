@@ -1,107 +1,203 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, Text, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
+import React, { Component, useState, useEffect } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Animated, Platform, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Input } from 'react-native-elements';
-import Signup from '../Signup';
+import { Input, Text } from 'react-native-elements';
 
 export default function Home({ navigation }) {
 
+  const [offset] = useState(new Animated.ValueXY({ x: 0, y: 90 }))
+  const [opacity] = useState(new Animated.Value(0))
+  const [logo] = useState(new Animated.ValueXY({x: 275, y: 155}))
+
+  useEffect(() => {
+
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
+
+    Animated.parallel([
+      Animated.spring(offset.y, {
+        toValue: 0,
+        speed: 4,
+      }),
+
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 500,        
+      })
+    ]).start();
+
+  }, []);
+
+  function keyboardDidShow() {
+    
+    Animated.parallel([
+      Animated.timing(logo.x, {
+        toValue: 55,
+        duration: 100,
+      }),
+      Animated.timing(logo.y, {
+        toValue: 65,
+        duration: 100,
+      }),
+    ]).start();
+  }
+
+  function keyboardDidHide() {
+
+    Animated.parallel([
+      Animated.timing(logo.x, {
+        toValue: 275,
+        speed: 4,
+        duration: 100,
+      }),
+      Animated.timing(logo.y, {
+        toValue: 155,
+        duration: 100,
+      }),
+    ]).start();
+  }
+
+
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
+  const [errorLogin, setErrorLogin] = useState(null)
 
-  const cadastrar = () =>{
+  const validar = () => {
+    let error = false
+    setErrorLogin(null)
+
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    if (!re.test(String(email).toLowerCase()) || email == null || password == null) {
+      setErrorLogin("Usuário ou senha incorreto")
+      error = true
+    }
+
+    return !error
+  }
+
+  const cadastrar = () => {
     navigation.navigate("Signup")
   }
 
-  const entrar = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "HomeUser" }]
-    })
+  const forgetPassword = () => {
+    navigation.navigate('Recuperarsenha')
   }
 
+  const cadastroEstab = () => {
+    navigation.navigate('CadastroEstab')
+  }
+
+  const entrar = () => {
+    if (validar()) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomeUser" }]
+      })
+    }
+  }
 
   return (
-    <View style={css.container}>
-     
-    
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : 'height'}
+      style={css.container}>
+
+      <View style = {css.logo_img}>
+        <Animated.Image
+          style = {{
+            width: logo.x,
+            height: logo.y,
+          }}
+          source={require('C:/HelpReserve/assets/helpreserve.png')} />
+      </View>
+
+
+      <Animated.View
+        style={[
+          css.container, css.login_form,
+          {
+            opacity: opacity,
+            transform: [
+              { translateY: offset.y }
+            ]
+          }
+        ]}
+      >
+        <Input
+          placeholder='E-mail'
+          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+          textContentType='emailAddress'
+          keyboardType='email-address'
+          autoCapitalize='none'
+          autoCompleteType='email'
+          onChangeText={value => {
+            setEmail(value)
+            setErrorLogin(null)
+          }
+          } />
+        <Input
+          placeholder='Senha'
+          secureTextEntry={true}
+          autoCapitalize='none'
+          onChangeText={value => {
+            setPassword(value)
+            setErrorLogin(null)
+          }
+          }
+          leftIcon={{ type: 'font-awesome', name: 'lock' }}
+          errorMessage={errorLogin}
+        />
+
+        <TouchableOpacity style={css.login_button}
+          onPress={() => entrar()}>
+          <Text style={css.button_text}>Entrar</Text>
+        </TouchableOpacity>
+
+        <View source={css.view_cadastro}>
+          <Text style={css.msg_cadastro}>Não é cadastrado?⠀
+              <Text style={css.click_cadastro}
+              onPress={() => cadastrar()}>
+              Cadastre-se
+                </Text>
+          </Text>
+        </View>
         <View>
-                <Image
-                  source={require('C:/HelpReserve/assets/helpreserve.png')}
-                  style={css.logo_img} />
+          <Text style={css.click_senha}
+            onPress={() => forgetPassword()}>
+            Esqueci minha senha
+                </Text>
         </View>
 
-        <View style={css.login_form}>
-          <Input
-            placeholder='E-mail'
-            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-            textContentType='emailAddress'
-            keyboardType='email-address'
-            autoCapitalize='none'
-            autoCorrect={false}
-            autoCompleteType='email'
-            onChangeText={value => setEmail(value)} />
-          <Input
-            placeholder='Senha'
-            secureTextEntry={true}
-            autoCapitalize='none'
-            onChangeText={value => setPassword(value)}
-            leftIcon={{ type: 'font-awesome', name: 'lock' }} />
-
-          <TouchableOpacity style={css.login_button}
-            onPress={() => entrar()}>
-            <Text style={css.button_text}>Entrar</Text>
-          </TouchableOpacity>
-
-          <View source={css.view_cadastro}>
-            <Text style={css.msg_cadastro}>Não é cadastrado?⠀
-              <Text style={css.click_cadastro}
-                onPress={() => cadastrar()}>
-                Cadastre-se
-                </Text>
-            </Text>
-          </View>
-          <View>
-            <Text style={css.click_senha}
-              onPress={() => navigation.navigate('Recuperarsenha')}>
-              Esqueci minha senha
-                </Text>
-          </View>
-
-          <View source={css.estab_container}>
-            <Text style={css.msg_cadastro_estab}>
-              Possui um estabelecimento?
+        <View source={css.estab_container}>
+          <Text style={css.msg_cadastro_estab}>
+            Possui um estabelecimento?
               </Text>
 
-            <TouchableOpacity style={css.estab_button}
-              onPress={() => navigation.navigate('CadastroEstab')}>
-              <Text style={css.estab_button_text}>Cadastrar</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={css.estab_button}
+            onPress={() => cadastroEstab()}>
+            <Text style={css.estab_button_text}>Cadastrar</Text>
+          </TouchableOpacity>
 
-
-          </View>
 
         </View>
-    </View>
+      </Animated.View>
+    </KeyboardAvoidingView>
   );
 
 }
 
 const css = StyleSheet.create({
-  lightbg: {
-    resizeMode: 'contain',
-    alignItems: 'center'
-  },
+  
   estab_button: {
     width: 100,
     height: 30,
     backgroundColor: '#750606',
     alignItems: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
     borderRadius: 5,
     marginTop: 10,
   },
@@ -186,11 +282,9 @@ const css = StyleSheet.create({
   },
 
   logo_img: {
-    width: 250,
-    height: 150,
-    alignSelf: 'center',
-    resizeMode: 'contain',
-    marginTop: 10,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    marginTop: 5,
   },
 
   bg: {

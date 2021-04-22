@@ -3,11 +3,16 @@ import { Text, View, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function Feed() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Feed!</Text>
+      {/*<TouchableOpacity style={css.senha_button}
+           onPress={() => logout()}>
+          <Text style={css.button_text}>Logout</Text>
+       </TouchableOpacity>*/}
     </View>
   );
 }
@@ -16,10 +21,8 @@ function Profile() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
-                <Image
-                  source={require('C:/HelpReserve/assets/helpreserve.png')}
-                  style={css.logo_img} />
-        </View>
+        <Text>Profile!</Text>
+      </View>
     </View>
   );
 }
@@ -34,7 +37,12 @@ function Notifications() {
 
 const Tab = createBottomTabNavigator();
 
-export default function HomeUser() {
+export default function HomeUser({navigation}) {
+  
+  const logout = () => {
+    navigation.navigate('Home')
+  }
+
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -84,4 +92,25 @@ const css = StyleSheet.create({
         resizeMode: 'contain',
         marginTop: 50,
       },
+
+      button_text: {
+        fontWeight: 'bold',
+        fontSize: 22,
+        color: '#FFF',
+        alignSelf: 'center',
+        textAlign: 'justify',
+    },
+
+    senha_button: {
+      padding: 8,
+      width: 200,
+      height: 45,
+      marginTop: 25,
+      marginBottom: 15,
+      backgroundColor: '#BF0404',
+      alignItems: 'center',
+      alignSelf: 'center',
+      borderRadius: 5,
+  },
+
 });

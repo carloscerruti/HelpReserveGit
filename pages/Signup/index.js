@@ -1,12 +1,13 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { cpf } from 'cpf-cnpj-validator';
-import { CheckBox, Text } from 'react-native-elements';
+import { CheckBox, Text, Input } from 'react-native-elements';
+import { TextInputMask } from 'react-native-masked-text';
+import { launchCamera } from 'react-native-image-picker';
 
 const Stack = createStackNavigator();
 
@@ -19,123 +20,255 @@ export default function Signup({ navigation }) {
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
     const [password1, setPassword1] = useState(null)
+    const [errorNome, setErrorNome] = useState(null)
+    const [errorEndereco, setErrorEndereco] = useState(null)
+    const [errorTelefone, setErrorTelefone] = useState(null)
+    const [errorCPF, setErrorCPF] = useState(null)
+    const [errorEmail, setErrorEmail] = useState(null)
+    const [errorPassword, setErrorPassword] = useState(null)
+    const [errorPassword1, setErrorPassword1] = useState(null)
+    const [errorCadastro, setErrorCadastro] = useState(null)
     const [isSelected, setSelected] = useState(false)
 
+    let cpfField = null
+
+    const validar = () => {
+        let error = false
+        setErrorNome(null)
+        setErrorEndereco(null)
+        setErrorTelefone(null)
+        setErrorCPF(null)
+        setErrorEmail(null)
+        setErrorPassword(null)
+        setErrorPassword1(null)
+        setErrorCadastro(null)
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        
+        
+
+        if (nome == null) {
+            setErrorNome("Preencha seu nome corretamente")
+            error = true
+        }
+
+        if (endereco == null) {
+            setErrorEndereco("Preencha seu endereço corretamente")
+            error = true
+        }
+
+        if (telefone == null) {
+            setErrorTelefone("Preencha seu telefone corretamente")
+            error = true
+        }
+
+        if (cpf == null || cpfField.isValid()) {
+            setErrorCPF("Preencha seu CPF corretamente")
+            error = true
+            
+        }
+
+
+        if (!re.test(String(email).toLowerCase()) || email == null) {
+            setErrorEmail("Preencha seu e-mail corretamente")
+            error = true
+        }
+
+        if (password == null) {
+            setErrorPassword("Preencha sua senha corretamente")
+            error = true
+        }
+
+        /*if (password.length >= 1 && password.length < 8) {
+            setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
+            error = true
+        }*/
+
+        if (password != password1) {
+            setErrorCadastro("Senhas não correspondem")
+            error = true
+        }
+
+        return !error
+    }
+
     const salvar = () => {
-        /*console.log(nome)
-        console.log(endereco)
-        console.log(telefone)
-        console.log(cpf)
-        console.log(email)
-        console.log(password)
-        console.log(password1)*/
-        Alert.alert('Usuário cadastrado com sucesso!')
+        if (validar()) {
+            console.log(nome)
+            console.log(endereco)
+            console.log(telefone)
+            console.log(cpf)
+            console.log(email)
+            console.log(password)
+            console.log(password1)
+            Alert.alert('Usuário cadastrado com sucesso!')
+        }
     }
 
     return (
-        <View style={css.container}>
-            <Text style={css.cadastre_se}>Cadastre-se</Text>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : 'height'} style={[css.container, css.lightbg]}>
 
-                {/* <View>
-                <Image
-                  source={require('../assets/helpreserve.png')}
-                  style={css.logo_img} />
-                </View>*/}
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : 'height'}
+            style={css.container}
+            keyboardVerticalOffset = {5}>
+            <ScrollView >
+                <Text style={css.cadastre_se}>Cadastre-se</Text>
 
                 <View style={css.login_form}>
-                    <TextInput
+                    <Input
                         placeholder='Nome Completo'
-                        onChangeText={value => setNome(value)}
+                        onChangeText={value => {
+                            setNome(value)
+                            setErrorNome(null)
+                        }}
+                        errorMessage={errorNome}
                         returnKeyType="done"
-                        style={css.signup_input} />
-                    <TextInput
+                        style = {css.signup_input} />
+                    <Input
                         placeholder='Endereço'
-                        onChangeText={value => setEndereco(value)}
+                        onChangeText={value => {
+                            setEndereco(value)
+                            setErrorEndereco(null)
+                        }}
+                        errorMessage={errorEndereco}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    <TextInput
-                        placeholder='Telefone'
-                        keyboardType='phone-pad'
-                        onChangeText={value => setTelefone(value)}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <TextInput
-                        placeholder='CPF'
-                        keyboardType='numeric'
-                        onChangeText={value => setCPF(value)}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <TextInput
+                    
+                    <View style={css.containerMask}>
+                        <TextInputMask
+                            placeholder="Telefone"
+                            type={'cel-phone'}
+                            value={telefone}
+                            keyboardType="number-pad"
+                            options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99) '
+                            }}
+                            onChangeText={value => {
+                                setTelefone(value)
+                                setErrorTelefone(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.maskedInput} />
+                    </View>
+
+                        <View>
+                            <Text style={css.errorMessage}>{errorTelefone}</Text>
+                        </View>
+
+                    <View style={css.containerMask}>
+                        <TextInputMask
+                            placeholder='CPF'
+                            type={'cpf'}
+                            value={cpf}
+                            keyboardType="number-pad"
+                            onChangeText={value => {
+                                setCPF(value)
+                                setErrorCPF(null)
+                            }}
+                            returnKeyType="done"
+                            ref={(ref) => cpfField = ref}
+                            style = {css.maskedInput}
+                        />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorCPF}</Text>
+                    </View>
+
+                    <Input
                         placeholder='E-mail'
                         textContentType='emailAddress'
                         keyboardType='email-address'
                         autoCapitalize='none'
                         autoCorrect={false}
                         autoCompleteType='email'
-                        onChangeText={value => setEmail(value)}
+                        onChangeText={value => {
+                            setEmail(value)
+                            setErrorEmail(null)
+                        }}
+                        errorMessage={errorEmail}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    <TextInput
+                    <Input
                         placeholder='Senha'
                         secureTextEntry={true}
                         autoCapitalize='none'
-                        onChangeText={value => setPassword(value)}
+                        onChangeText={value => {
+                            setPassword(value)
+                            setErrorPassword(null)
+                        }}
+                        errorMessage={errorPassword}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    <TextInput
+                    <Input
                         placeholder='Digite novamente a senha'
                         secureTextEntry={true}
                         autoCapitalize='none'
-                        onChangeText={value => setPassword1(value)}
+                        onChangeText={value => {
+                            setPassword1(value)
+                            setErrorPassword1(null)
+                        }}
+                        errorMessage={errorPassword1}
                         returnKeyType="done"
                         style={css.signup_input} />
+                    
+                    <View>
+                        <Text style={css.errorMessage}>{errorCadastro}</Text>
+                    </View>
 
-
-                    <CheckBox
-                        title="Eu aceito os termos de uso"
-                        checkedIcon="check"
-                        checkedColor="green"
-                        uncheckedColor="red"
-                        uncheckedIcon="square-o"
-                        checked={isSelected}
-                        onPress={() => setSelected(!isSelected)}
-                    />
 
                 </View>
-                <TouchableOpacity style={css.login_button}>
+                <TouchableOpacity style={css.login_button}
+                    onPress={() => salvar()}>
                     <Text style={css.button_text}
-                        onPress={() => salvar()}>Cadastrar</Text>
+                    >Cadastrar</Text>
                 </TouchableOpacity>
-
-            </KeyboardAvoidingView>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
 
     );
 
 }
 
 const css = StyleSheet.create({
-    lightbg: {
-        resizeMode: 'contain',
-        alignItems: 'center'
-    },
 
     cadastre_se: {
         fontSize: 30,
         textAlign: 'center',
         fontWeight: 'bold',
-        marginTop: 15
+        marginTop: 12,
+        marginBottom: 15,
+    },
+
+    errorMessage: {
+        fontSize: 12,
+        color: "#f00",
+        marginLeft: 15,
+        alignSelf: 'flex-start',
+    },
+
+    maskedInput: {
+        flexGrow: 1,
+        height: 40, 
+        fontSize: 12,
+        borderBottomColor: '#999',
+        borderBottomWidth: 1,
+        borderStyle: 'solid',
+        alignSelf: 'flex-start'
+    },
+
+    containerMask: {
+        flexDirection: 'row',
+        marginBottom: 5,
+        marginLeft: 10,
+        marginRight: 10,
     },
 
     signup_input: {
-        backgroundColor: '#FFF',
-        fontSize: 15,
-        padding: 7,
-        marginTop: 15,
-        borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
+        fontSize: 12,
+        marginTop: 3,
+        borderColor: '#999'
     },
 
     login_msg_error: {
@@ -181,7 +314,6 @@ const css = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'center',
-        resizeMode: 'cover',
     },
 
 });

@@ -5,7 +5,6 @@
     "name": "HelpReserve",
     "slug": "HelpReserve",
     "orientation": "1.0.0",
-    "icon": "./assets/logohr.png",
     "splash":{
       "image": "./assets/Splash2.png",
       "resizeMode": "cover",
