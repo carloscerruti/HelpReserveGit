@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CheckBox, Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
+import RNPickerSelect from 'react-native-picker-select';
 
 const Stack = createStackNavigator();
 
@@ -239,13 +240,14 @@ export default function Signup({ navigation }) {
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
                     </View>
 
-
                 </View>
                 <TouchableOpacity style={css.login_button}
                     onPress={() => salvar()}>
                     <Text style={css.button_text}
                     >Cadastrar</Text>
                 </TouchableOpacity>
+
+                
             </ScrollView>
         </KeyboardAvoidingView>
 
