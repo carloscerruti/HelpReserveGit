@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState } from 'react';
 import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationHelpersContext } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CheckBox, Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
@@ -43,8 +43,8 @@ export default function Signup({ navigation }) {
         setErrorPassword1(null)
         setErrorCadastro(null)
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        
-        
+
+
 
         if (nome == null) {
             setErrorNome("Preencha seu nome corretamente")
@@ -75,15 +75,15 @@ export default function Signup({ navigation }) {
             }
         }
 
-        if (cpf == null || cpfField.isValid()) {
+        if (cpf == null || !cpfField.isValid()) {
             setErrorCPF("Preencha seu CPF corretamente")
             error = true
         }
 
         if (cpf != null) {
-            if(cpf.length < 14){
-            setErrorCPF("Preencha o CPF corretamente")
-            error = true
+            if (cpf.length < 14) {
+                setErrorCPF("Preencha o CPF corretamente")
+                error = true
             }
         }
 
@@ -98,15 +98,15 @@ export default function Signup({ navigation }) {
         }
 
         if (password != null) {
-            if(password.length < 8){
-            setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
-            error = true
-           }
+            if (password.length < 8) {
+                setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
+                error = true
+            }
 
             else {
                 if (password != password1) {
-                setErrorCadastro("Senhas não correspondem")
-                error = true
+                    setErrorCadastro("Senhas não correspondem")
+                    error = true
                 }
             }
         }
@@ -124,6 +124,7 @@ export default function Signup({ navigation }) {
             console.log(password)
             console.log(password1)
             Alert.alert('Usuário cadastrado com sucesso!')
+            navigation.navigate('Home')
         }
     }
 
@@ -132,7 +133,7 @@ export default function Signup({ navigation }) {
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : 'height'}
             style={css.container}
-            keyboardVerticalOffset = {5}>
+            keyboardVerticalOffset={5}>
             <ScrollView >
                 <Text style={css.cadastre_se}>Cadastre-se</Text>
 
@@ -145,7 +146,7 @@ export default function Signup({ navigation }) {
                         }}
                         errorMessage={errorNome}
                         returnKeyType="done"
-                        style = {css.signup_input} />
+                        style={css.signup_input} />
                     <Input
                         placeholder='Endereço'
                         onChangeText={value => {
@@ -155,7 +156,7 @@ export default function Signup({ navigation }) {
                         errorMessage={errorEndereco}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    
+
                     <View style={css.containerMask}>
                         <TextInputMask
                             placeholder="Telefone"
@@ -175,9 +176,9 @@ export default function Signup({ navigation }) {
                             style={css.maskedInput} />
                     </View>
 
-                        <View>
-                            <Text style={css.errorMessage}>{errorTelefone}</Text>
-                        </View>
+                    <View>
+                        <Text style={css.errorMessage}>{errorTelefone}</Text>
+                    </View>
 
                     <View style={css.containerMask}>
                         <TextInputMask
@@ -191,7 +192,7 @@ export default function Signup({ navigation }) {
                             }}
                             returnKeyType="done"
                             ref={(ref) => cpfField = ref}
-                            style = {css.maskedInput}
+                            style={css.maskedInput}
                         />
                     </View>
 
@@ -235,10 +236,19 @@ export default function Signup({ navigation }) {
                         errorMessage={errorPassword1}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    
+
                     <View>
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
                     </View>
+
+                   {/* <RNPickerSelect
+                        placeholder="Selecione um gênero"
+                        onValueChange={(value) => console.log(value)}
+                        items={[
+                            { label: 'Masculino', value: 'masculino' },
+                            { label: 'Feminino', value: 'feminino' },
+                        ]}
+                    />*/}
 
                 </View>
                 <TouchableOpacity style={css.login_button}
@@ -247,7 +257,7 @@ export default function Signup({ navigation }) {
                     >Cadastrar</Text>
                 </TouchableOpacity>
 
-                
+
             </ScrollView>
         </KeyboardAvoidingView>
 
@@ -274,7 +284,7 @@ const css = StyleSheet.create({
 
     maskedInput: {
         flexGrow: 1,
-        height: 40, 
+        height: 40,
         fontSize: 12,
         borderBottomColor: '#999',
         borderBottomWidth: 1,

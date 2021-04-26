@@ -81,7 +81,7 @@ export default function Home({ navigation }) {
   }
 
   const cadastrar = () => {
-    navigation.navigate("Signup")
+    navigation.navigate('Signup')
   }
 
   const forgetPassword = () => {

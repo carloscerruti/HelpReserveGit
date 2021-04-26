@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Text, View, StyleSheet} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function Feed() {
   return (
@@ -17,11 +16,22 @@ function Feed() {
   );
 }
 
-function Profile() {
+function Profile({navigation}) {
+  const logout = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }]
+    })
+
+  }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
-        <Text>Profile!</Text>
+        <TouchableOpacity style={css.login_button}
+          onPress={() => logout()}>
+          <Text style={css.button_text}
+          >Sair</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -37,11 +47,9 @@ function Notifications() {
 
 const Tab = createBottomTabNavigator();
 
-export default function HomeUser({navigation}) {
+export default function HomeUser({ navigation }) {
+
   
-  const logout = () => {
-    navigation.navigate('Home')
-  }
 
   return (
     <Tab.Navigator
@@ -85,32 +93,52 @@ export default function HomeUser({navigation}) {
 }
 
 const css = StyleSheet.create({
-    logo_img: {
-        width: 250,
-        height: 150,
-        alignSelf: 'center',
-        resizeMode: 'contain',
-        marginTop: 50,
-      },
+  logo_img: {
+    width: 250,
+    height: 150,
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    marginTop: 50,
+  },
 
-      button_text: {
-        fontWeight: 'bold',
-        fontSize: 22,
-        color: '#FFF',
-        alignSelf: 'center',
-        textAlign: 'justify',
-    },
+  button_text: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: '#FFF',
+    alignSelf: 'center',
+    textAlign: 'justify',
+  },
 
-    senha_button: {
-      padding: 8,
-      width: 200,
-      height: 45,
-      marginTop: 25,
-      marginBottom: 15,
-      backgroundColor: '#BF0404',
-      alignItems: 'center',
-      alignSelf: 'center',
-      borderRadius: 5,
+  senha_button: {
+    padding: 8,
+    width: 200,
+    height: 45,
+    marginTop: 25,
+    marginBottom: 15,
+    backgroundColor: '#BF0404',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+  },
+
+  login_button: {
+    padding: 8,
+    width: 200,
+    height: 45,
+    marginTop: 35,
+    marginBottom: 15,
+    backgroundColor: '#BF0404',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+  },
+
+  button_text: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    color: '#FFF',
+    alignSelf: 'center',
+    textAlign: 'justify',
   },
 
 });
