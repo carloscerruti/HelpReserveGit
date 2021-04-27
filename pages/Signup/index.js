@@ -14,14 +14,12 @@ const Stack = createStackNavigator();
 export default function Signup({ navigation }) {
 
     const [nome, setNome] = useState(null)
-    const [endereco, setEndereco] = useState(null)
     const [telefone, setTelefone] = useState(null)
     const [cpf, setCPF] = useState(null)
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
     const [password1, setPassword1] = useState(null)
     const [errorNome, setErrorNome] = useState(null)
-    const [errorEndereco, setErrorEndereco] = useState(null)
     const [errorTelefone, setErrorTelefone] = useState(null)
     const [errorCPF, setErrorCPF] = useState(null)
     const [errorEmail, setErrorEmail] = useState(null)
@@ -35,7 +33,6 @@ export default function Signup({ navigation }) {
     const validar = () => {
         let error = false
         setErrorNome(null)
-        setErrorEndereco(null)
         setErrorTelefone(null)
         setErrorCPF(null)
         setErrorEmail(null)
@@ -56,11 +53,6 @@ export default function Signup({ navigation }) {
                 setErrorNome("Preencha o nome corretamente")
                 error = true
             }
-        }
-
-        if (endereco == null) {
-            setErrorEndereco("Preencha seu endereço corretamente")
-            error = true
         }
 
         if (telefone == null) {
@@ -115,16 +107,14 @@ export default function Signup({ navigation }) {
     }
 
     const salvar = () => {
-        if (validar()) {
+        if (validar({navigation})) {
             console.log(nome)
-            console.log(endereco)
             console.log(telefone)
             console.log(cpf)
             console.log(email)
             console.log(password)
             console.log(password1)
             Alert.alert('Usuário cadastrado com sucesso!')
-            navigation.navigate('Home')
         }
     }
 
@@ -140,6 +130,7 @@ export default function Signup({ navigation }) {
                 <View style={css.login_form}>
                     <Input
                         placeholder='Nome Completo'
+                        autoCapitalize = 'sentences'
                         onChangeText={value => {
                             setNome(value)
                             setErrorNome(null)
@@ -147,16 +138,7 @@ export default function Signup({ navigation }) {
                         errorMessage={errorNome}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    <Input
-                        placeholder='Endereço'
-                        onChangeText={value => {
-                            setEndereco(value)
-                            setErrorEndereco(null)
-                        }}
-                        errorMessage={errorEndereco}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-
+                
                     <View style={css.containerMask}>
                         <TextInputMask
                             placeholder="Telefone"

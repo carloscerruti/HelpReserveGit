@@ -6,12 +6,17 @@ import { TextInput } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input, Text } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Home({ navigation }) {
 
   const [offset] = useState(new Animated.ValueXY({ x: 0, y: 90 }))
   const [opacity] = useState(new Animated.Value(0))
   const [logo] = useState(new Animated.ValueXY({x: 275, y: 155}))
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorLogin, setErrorLogin] = useState(null)
+  const [hidePass, setHidePass] = useState(true)
 
   useEffect(() => {
 
@@ -61,18 +66,13 @@ export default function Home({ navigation }) {
     ]).start();
   }
 
-
-  const [email, setEmail] = useState(null)
-  const [password, setPassword] = useState(null)
-  const [errorLogin, setErrorLogin] = useState(null)
-
   const validar = () => {
     let error = false
     setErrorLogin(null)
 
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    if (!re.test(String(email).toLowerCase()) || email == null || password == null) {
+    if (!re.test(String(email).toLowerCase()) || email == '' || password == '') {
       setErrorLogin("Usuário ou senha incorreto")
       error = true
     }
@@ -129,30 +129,45 @@ export default function Home({ navigation }) {
           }
         ]}
       >
-        <Input
-          placeholder='E-mail'
-          leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-          textContentType='emailAddress'
-          keyboardType='email-address'
-          autoCapitalize='none'
-          autoCompleteType='email'
-          onChangeText={value => {
-            setEmail(value)
-            setErrorLogin(null)
-          }
-          } />
-        <Input
-          placeholder='Senha'
-          secureTextEntry={true}
-          autoCapitalize='none'
-          onChangeText={value => {
-            setPassword(value)
-            setErrorLogin(null)
-          }
-          }
-          leftIcon={{ type: 'font-awesome', name: 'lock' }}
-          errorMessage={errorLogin}
-        />
+        
+          <Input
+            placeholder='E-mail'
+            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+            textContentType='emailAddress'
+            keyboardType='email-address'
+            autoCapitalize='none'
+            autoCompleteType='email'
+            value = {email}
+            onChangeText={ (texto) => {
+              setEmail(texto)
+              setErrorLogin(null)
+            }
+            } />
+        <View style={css.inputArea}>
+          <Input
+            placeholder='Senha'            
+            leftIcon={{ type: 'font-awesome', name: 'lock' }}
+            secureTextEntry={hidePass}
+            autoCapitalize='none'
+            value = {password}
+            onChangeText={ (texto1) => {
+              setPassword(texto1)
+              setErrorLogin(null)
+            }
+            }
+            errorMessage={errorLogin}
+          />
+
+          <TouchableOpacity style={css.icon}
+            onPress={() => setHidePass(!hidePass)}>
+            {hidePass ?
+              <Ionicons name="eye" size={30} />
+              :
+              <Ionicons name="eye-off" size={30} />
+            }
+          </TouchableOpacity>
+
+        </View>
 
         <TouchableOpacity style={css.login_button}
           onPress={() => entrar()}>
@@ -194,6 +209,16 @@ export default function Home({ navigation }) {
 
 const css = StyleSheet.create({
   
+  inputArea: {
+    flexDirection: 'row',
+    width: '85%',
+  },
+
+  icon:{
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+ 
   estab_button: {
     width: 100,
     height: 30,
@@ -286,7 +311,7 @@ const css = StyleSheet.create({
   logo_img: {
     resizeMode: 'cover',
     justifyContent: 'center',
-    marginTop: 5,
+    marginBottom: 5,
   },
 
   bg: {

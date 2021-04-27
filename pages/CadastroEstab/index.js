@@ -70,10 +70,10 @@ export default function CadastroEstab({ navigation }) {
             error = true
         }
 
-        if(dono != null) {
-            if(dono.length < 5) {
-            setErrorDono("Preencha o nome completo do dono")
-            error = true
+        if (dono != null) {
+            if (dono.length < 5) {
+                setErrorDono("Preencha o nome completo do responsável")
+                error = true
             }
         }
 
@@ -101,9 +101,9 @@ export default function CadastroEstab({ navigation }) {
         }
 
         if (cnpj != null) {
-            if(cnpj.length < 18){
-            setErrorCNPJ("Preencha o CNPJ corretamente")
-            error = true
+            if (cnpj.length < 18) {
+                setErrorCNPJ("Preencha o CNPJ corretamente")
+                error = true
             }
         }
 
@@ -118,17 +118,22 @@ export default function CadastroEstab({ navigation }) {
         }
 
         if (password != null) {
-            if(password.length < 8){
-            setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
-            error = true
-           }
+            if (password.length < 8) {
+                setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
+                error = true
+            }
 
             else {
                 if (password != password1) {
-                setErrorCadastro("Senhas não correspondem")
-                error = true
+                    setErrorCadastro("Senhas não correspondem")
+                    error = true
                 }
             }
+        }
+
+        if (descricao == null) {
+            setErrorDescricao("Este campo não pode estar vazio")
+            error = true
         }
 
         /*if (password.length >= 1 && password.length < 8) {
@@ -142,7 +147,7 @@ export default function CadastroEstab({ navigation }) {
             error = true
         }*/
 
-        if(!isSelected){
+        if (!isSelected) {
             setErrorIsSelected("Aceite os termos de uso!")
             error = true
         }
@@ -173,151 +178,168 @@ export default function CadastroEstab({ navigation }) {
             keyboardVerticalOffset={5}>
             <ScrollView >
                 <Text style={css.cadastro}>Cadastro de Estabelecimento</Text>
-                
-                    <View style={css.login_form}>
-                        <Input
-                            placeholder='Nome do estabelecimento'
-                            onChangeText={value => {
-                                setNomeEstab(value)
-                                setErrorNomeEstab(null)
+
+                <View style={css.login_form}>
+                    <Input
+                        placeholder='Nome do estabelecimento'
+                        onChangeText={value => {
+                            setNomeEstab(value)
+                            setErrorNomeEstab(null)
+                        }}
+                        errorMessage={errorNomeEstab}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+                    <Input
+                        placeholder='Nome do(a) responsável legal'
+                        onChangeText={value => {
+                            setDono(value)
+                            setErrorDono(null)
+                        }}
+                        errorMessage={errorDono}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+                    <Input
+                        placeholder="Endereço"
+                        onChangeText={value => {
+                            setEndereco(value)
+                            setErrorEndereco(null)
+                        }}
+                        errorMessage={errorEndereco}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+
+                    <View style={css.containerMask}>
+                        <TextInputMask
+                            placeholder="Celular ou Telefone"
+                            type={'cel-phone'}
+                            value={telefone}
+                            keyboardType="number-pad"
+                            options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99) '
                             }}
-                            errorMessage={errorNomeEstab}
-                            returnKeyType="done"
-                            style={css.signup_input} />
-                        <Input
-                            placeholder='Dono do estabelecimento'
                             onChangeText={value => {
-                                setDono(value)
-                                setErrorDono(null)
+                                setTelefone(value)
+                                setErrorTelefone(null)
                             }}
-                            errorMessage={errorDono}
                             returnKeyType="done"
-                            style={css.signup_input} />
-                        <Input
-                            placeholder='Endereço'
+                            style={css.maskedInput} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorTelefone}</Text>
+                    </View>
+
+                    <View style={css.containerMask}>
+                        <TextInputMask
+                            placeholder='CNPJ'
+                            type={'cnpj'}
+                            value={cnpj}
+                            keyboardType="number-pad"
                             onChangeText={value => {
-                                setEndereco(value)
-                                setErrorEndereco(null)
+                                setCNPJ(value)
+                                setErrorCNPJ(null)
                             }}
-                            errorMessage={errorEndereco}
                             returnKeyType="done"
-                            style={css.signup_input} />
+                            ref={(ref) => cnpjField = ref}
+                            style={css.maskedInput}
+                        />
+                    </View>
 
-                        <View style={css.containerMask}>
-                            <TextInputMask
-                                placeholder="Celular ou Telefone"
-                                type={'cel-phone'}
-                                value={telefone}
-                                keyboardType="number-pad"
-                                options={{
-                                    maskType: 'BRL',
-                                    withDDD: true,
-                                    dddMask: '(99) '
-                                }}
-                                onChangeText={value => {
-                                    setTelefone(value)
-                                    setErrorTelefone(null)
-                                }}
-                                returnKeyType="done"
-                                style={css.maskedInput} />
-                        </View>
+                    <View>
+                        <Text style={css.errorMessage}>{errorCNPJ}</Text>
+                    </View>
 
-                        <View>
-                            <Text style={css.errorMessage}>{errorTelefone}</Text>
-                        </View>
+                    <Input
+                        placeholder='E-mail'
+                        textContentType='emailAddress'
+                        keyboardType='email-address'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        autoCompleteType='email'
+                        onChangeText={value => {
+                            setEmail(value)
+                            setErrorEmail(null)
+                        }}
+                        errorMessage={errorEmail}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+                    <Input
+                        placeholder='Senha'
+                        secureTextEntry={true}
+                        autoCapitalize='none'
+                        onChangeText={value => {
+                            setPassword(value)
+                            setErrorPassword(null)
+                        }}
+                        errorMessage={errorPassword}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+                    <Input
+                        placeholder='Digite novamente a senha'
+                        secureTextEntry={true}
+                        autoCapitalize='none'
+                        onChangeText={value => {
+                            setPassword1(value)
+                            setErrorPassword1(null)
+                        }}
+                        errorMessage={errorPassword1}
+                        returnKeyType="done"
+                        style={css.signup_input} />
+                    
+                    <View>
+                        <Text style={css.errorMessage}>{errorCadastro}</Text>
+                    </View>
 
-                        <View style={css.containerMask}>
-                            <TextInputMask
-                                placeholder='CNPJ'
-                                type={'cnpj'}
-                                value={cnpj}
-                                keyboardType="number-pad"
-                                onChangeText={value => {
-                                    setCNPJ(value)
-                                    setErrorCNPJ(null)
-                                }}
-                                returnKeyType="done"
-                                ref={(ref) => cnpjField = ref}
-                                style={css.maskedInput}
-                            />
-                        </View>
+                    <Text style={css.namesInput}>Razão social / Descrição</Text>
+                    <TextInput
+                        style={css.inputDetails}
+                        placeholder="Razão social / Descrição"
+                        onChangeText={value => {
+                            setDescricao(value)
+                            setErrorDescricao(null)
+                        }}
 
-                        <View>
-                            <Text style={css.errorMessage}>{errorCNPJ}</Text>
-                        </View>
+                        returnKeyType="done"
+                    />
+                    <View>
+                        <Text style={css.errorMessage}>{errorDescricao}</Text>
+                    </View>
 
-                        <Input
-                            placeholder='E-mail'
-                            textContentType='emailAddress'
-                            keyboardType='email-address'
-                            autoCapitalize='none'
-                            autoCorrect={false}
-                            autoCompleteType='email'
-                            onChangeText={value => {
-                                setEmail(value)
-                                setErrorEmail(null)
-                            }}
-                            errorMessage={errorEmail}
-                            returnKeyType="done"
-                            style={css.signup_input} />
-                        <Input
-                            placeholder='Senha'
-                            secureTextEntry={true}
-                            autoCapitalize='none'
-                            onChangeText={value => {
-                                setPassword(value)
-                                setErrorPassword(null)
-                            }}
-                            errorMessage={errorPassword}
-                            returnKeyType="done"
-                            style={css.signup_input} />
-                        <Input
-                            placeholder='Digite novamente a senha'
-                            secureTextEntry={true}
-                            autoCapitalize='none'
-                            onChangeText={value => {
-                                setPassword1(value)
-                                setErrorPassword1(null)
-                            }}
-                            errorMessage={errorPassword1}
-                            returnKeyType="done"
-                            style={css.signup_input} />
+                    
 
-                        <View>
-                            <Text style={css.errorMessage}>{errorCadastro}</Text>
-                        </View>
-
-                        {/*<TouchableOpacity style={css.estab_button}
+                    {/*<TouchableOpacity style={css.estab_button}
                             onPress={() => escolherFoto()} >
                         </TouchableOpacity>*/}
 
-                        <View>
-                            <Text style={css.termosUso}
+                    <View>
+                        <Text style={css.termosUso}
                             onPress={() => Linking.openURL('http://google.com')}>Termos de uso</Text>
-                        </View>
-                        <CheckBox
-                            title="Li e aceito os termos de uso"
-                            checkedIcon="check"
-                            checkedColor="green"
-                            uncheckedColor="red"
-                            uncheckedIcon="square-o"
-                            checked={isSelected}
-                            onPress={() => {
-                                setSelected(!isSelected)
-                                setErrorIsSelected(false)
-                            }}
-                        />
-                        <View>
-                            <Text style={css.errorMessage}>{errorisSelected}</Text>
-                        </View>
-
                     </View>
-                    <TouchableOpacity style={css.login_button}
-                        onPress={() => salvar()}>
-                        <Text style={css.button_text}
-                        >Cadastrar</Text>
-                    </TouchableOpacity>
-                
+                    <CheckBox
+                        title="Li e aceito os termos de uso"
+                        checkedIcon="check"
+                        checkedColor="green"
+                        uncheckedColor="red"
+                        uncheckedIcon="square-o"
+                        checked={isSelected}
+                        onPress={() => {
+                            setSelected(!isSelected)
+                            setErrorIsSelected(false)
+                        }}
+                    />
+                    <View>
+                        <Text style={css.errorMessage}>{errorisSelected}</Text>
+                    </View>
+
+                </View>
+                <TouchableOpacity style={css.login_button}
+                    onPress={() => salvar()}>
+                    <Text style={css.button_text}
+                    >Cadastrar</Text>
+                </TouchableOpacity>
+
             </ScrollView>
         </KeyboardAvoidingView>
 
@@ -326,6 +348,22 @@ export default function CadastroEstab({ navigation }) {
 }
 
 const css = StyleSheet.create({
+
+
+    namesInput: {
+        fontWeight: 'bold',
+        paddingLeft: 12
+    },
+
+    inputDetails: {
+        paddingLeft: 12,
+        marginLeft: 12,
+        borderWidth: 2,
+        borderRadius: 8,
+        borderColor: 'black',
+        width: '90%',
+        height: 100,
+    },
 
     cadastro: {
         fontSize: 30,
@@ -353,6 +391,7 @@ const css = StyleSheet.create({
         flexGrow: 1,
         height: 40,
         fontSize: 12,
+        color: 'grey',
         borderBottomColor: '#999',
         borderBottomWidth: 1,
         borderStyle: 'solid',
@@ -369,7 +408,8 @@ const css = StyleSheet.create({
     signup_input: {
         fontSize: 12,
         marginTop: 3,
-        borderColor: '#999'
+        borderColor: '#999',
+        color: 'grey',
     },
 
     login_msg_error: {
@@ -382,9 +422,6 @@ const css = StyleSheet.create({
     login_form: {
         width: '80%',
         alignSelf: 'center',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 20,
     },
 
     login_button: {
