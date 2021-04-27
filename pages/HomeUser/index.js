@@ -16,7 +16,7 @@ function Feed() {
   );
 }
 
-function Profile({navigation}) {
+function Profile({ navigation }) {
   const logout = () => {
     navigation.reset({
       index: 0,
@@ -27,11 +27,7 @@ function Profile({navigation}) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
-        <TouchableOpacity style={css.login_button}
-          onPress={() => logout()}>
-          <Text style={css.button_text}
-          >Sair</Text>
-        </TouchableOpacity>
+        <Text>Notifications!</Text>
       </View>
     </View>
   );
@@ -41,6 +37,11 @@ function Notifications() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Notifications!</Text>
+      <TouchableOpacity style={css.login_button}
+        onPress={() => logout()}>
+        <Text style={css.button_text}
+        >Sair</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -49,7 +50,7 @@ const Tab = createBottomTabNavigator();
 
 export default function HomeUser({ navigation }) {
 
-  
+
 
   return (
     <Tab.Navigator
