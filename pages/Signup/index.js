@@ -1,13 +1,10 @@
-import { Asset } from 'expo-asset';
-import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { NavigationContainer, NavigationHelpersContext } from '@react-navigation/native';
+import React, { useState, useRef } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
-import { CheckBox, Text, Input } from 'react-native-elements';
+import { Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
-import RNPickerSelect from 'react-native-picker-select';
+import { RadioButton } from 'react-native-paper';
 
 const Stack = createStackNavigator();
 
@@ -27,10 +24,14 @@ export default function Signup({ navigation }) {
     const [errorPassword1, setErrorPassword1] = useState(null)
     const [errorCadastro, setErrorCadastro] = useState(null)
     const [isSelected, setSelected] = useState(false)
+    const [ErrorGenero, setErrorGenero] = useState(false)
+    const cpfRef = useRef(null)
+    const telRef = useRef(null)
+    const [value, setValue] = React.useState(null);
 
-    let cpfField = null
 
     const validar = () => {
+        
         let error = false
         setErrorNome(null)
         setErrorTelefone(null)
@@ -39,9 +40,13 @@ export default function Signup({ navigation }) {
         setErrorPassword(null)
         setErrorPassword1(null)
         setErrorCadastro(null)
+        setErrorGenero(null)
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
+        const unmaskCPF = cpfRef?.current.getRawValue();
+        const unmaskTEL = telRef?.current.getRawValue();
 
+        const cpfIsValid = cpfRef?.current.isValid();
 
         if (nome == null) {
             setErrorNome("Preencha seu nome corretamente")
@@ -67,7 +72,7 @@ export default function Signup({ navigation }) {
             }
         }
 
-        if (cpf == null || !cpfField.isValid()) {
+        if (unmaskCPF == null || !cpfIsValid) {
             setErrorCPF("Preencha seu CPF corretamente")
             error = true
         }
@@ -103,17 +108,28 @@ export default function Signup({ navigation }) {
             }
         }
 
+        if (value == null){
+            setErrorGenero("Selecione um genero")
+            error = true
+        }
+
         return !error
-    }
+        
+    }    
 
     const salvar = () => {
+
+        const unmaskCPF = cpfRef?.current.getRawValue();
+        const unmaskTEL = telRef?.current.getRawValue();
+
         if (validar({navigation})) {
             console.log(nome)
-            console.log(telefone)
-            console.log(cpf)
+            console.log(unmaskTEL)
+            console.log(unmaskCPF)
             console.log(email)
             console.log(password)
-            console.log(password1)
+            console.log(password1)            
+            console.log(value)
             Alert.alert('Usuário cadastrado com sucesso!')
         }
     }
@@ -155,6 +171,7 @@ export default function Signup({ navigation }) {
                                 setErrorTelefone(null)
                             }}
                             returnKeyType="done"
+                            ref = {telRef}
                             style={css.maskedInput} />
                     </View>
 
@@ -168,12 +185,12 @@ export default function Signup({ navigation }) {
                             type={'cpf'}
                             value={cpf}
                             keyboardType="number-pad"
-                            onChangeText={value => {
-                                setCPF(value)
+                            onChangeText={(cpf) => {
+                                setCPF(cpf)
                                 setErrorCPF(null)
                             }}
                             returnKeyType="done"
-                            ref={(ref) => cpfField = ref}
+                            ref = {cpfRef}
                             style={css.maskedInput}
                         />
                     </View>
@@ -223,20 +240,22 @@ export default function Signup({ navigation }) {
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
                     </View>
 
-                   {/* <RNPickerSelect
-                        placeholder="Selecione um gênero"
-                        onValueChange={(value) => console.log(value)}
-                        items={[
-                            { label: 'Masculino', value: 'masculino' },
-                            { label: 'Feminino', value: 'feminino' },
-                        ]}
-                    />*/}
-
+                    <RadioButton.Group onValueChange={newValue => setValue(newValue)} 
+                        value={value}>
+                        <View style={css.radioGenero}>                            
+                            <RadioButton value="F" color="red"/>
+                            <Text>Feminino</Text>                        
+                            <RadioButton value="M" color="red"/>
+                            <Text>Masculino</Text>
+                        </View>
+                    </RadioButton.Group>
+                    <View>
+                        <Text style={css.errorMessage}>{ErrorGenero}</Text>
+                    </View>
                 </View>
                 <TouchableOpacity style={css.login_button}
                     onPress={() => salvar()}>
-                    <Text style={css.button_text}
-                    >Cadastrar</Text>
+                    <Text style={css.button_text}>Cadastrar</Text>
                 </TouchableOpacity>
 
 
@@ -248,6 +267,12 @@ export default function Signup({ navigation }) {
 }
 
 const css = StyleSheet.create({
+
+    radioGenero:{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'left'
+    },
 
     cadastre_se: {
         fontSize: 30,
