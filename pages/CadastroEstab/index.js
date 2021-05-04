@@ -1,17 +1,16 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Platform, Linking } from 'react-native';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useRef, useState } from 'react';
+import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform, Linking, TextInput } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CheckBox, Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
-import { launchCamera } from 'react-native-image-picker';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
-export default function CadastroEstab({ navigation }) {
+export default function CadastroEstab() {
 
     const [nomeEstab, setNomeEstab] = useState(null)
     const [dono, setDono] = useState(null)
@@ -34,15 +33,15 @@ export default function CadastroEstab({ navigation }) {
     const [errorDescricao, setErrorDescricao] = useState(null)
     const [isSelected, setSelected] = useState(false)
     const [errorisSelected, setErrorIsSelected] = useState(false)
+    const cnpjRef = useRef(null)
+    const telRef = useRef(null)
 
-    const escolherFoto = () => {
+    /*const escolherFoto = () => {
         const options = {};
         ImagePicker.launchImageLibrary(options, response => {
             console.log("response", response);
         });
-
-    }
-    let cnpjField = null
+    }*/
 
     const validar = () => {
         let error = false
@@ -59,13 +58,17 @@ export default function CadastroEstab({ navigation }) {
         setErrorIsSelected(false)
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
+        const unmaskCNPJ = cnpjRef?.current.getRawValue();
+        const unmaskTEL = telRef?.current.getRawValue();
 
-        if (nomeEstab == null) {
+        const cnpjIsValid = cnpjRef?.current.isValid();
+
+        if (!nomeEstab) {
             setErrorNomeEstab("Preencha o nome do estabelecimento")
             error = true
         }
 
-        if (dono == null) {
+        if (!dono) {
             setErrorDono("Preencha o nome corretamente")
             error = true
         }
@@ -77,12 +80,12 @@ export default function CadastroEstab({ navigation }) {
             }
         }
 
-        if (endereco == null) {
+        if (!endereco) {
             setErrorEndereco("Preencha o endereço corretamente")
             error = true
         }
 
-        if (telefone == null) {
+        if (!telefone) {
             setErrorTelefone("Preencha o telefone corretamente")
             error = true
         }
@@ -94,7 +97,7 @@ export default function CadastroEstab({ navigation }) {
             }
         }
 
-        if (cnpj == null || cnpjField.isValid()) {
+        if (!unmaskCNPJ || !cnpjIsValid) {
             setErrorCNPJ("Preencha o CNPJ corretamente")
             error = true
 
@@ -112,7 +115,7 @@ export default function CadastroEstab({ navigation }) {
             error = true
         }
 
-        if (password == null) {
+        if (!password) {
             setErrorPassword("Preencha sua senha corretamente")
             error = true
         }
@@ -131,21 +134,10 @@ export default function CadastroEstab({ navigation }) {
             }
         }
 
-        if (descricao == null) {
+        if (!descricao) {
             setErrorDescricao("Este campo não pode estar vazio")
             error = true
         }
-
-        /*if (password.length >= 1 && password.length < 8) {
-            setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
-            error = true
-        }*/
-
-
-        /*if(descricao == null){
-            setErrorDescricao("Escreva um descrição")
-            error = true
-        }*/
 
         if (!isSelected) {
             setErrorIsSelected("Aceite os termos de uso!")
@@ -156,17 +148,21 @@ export default function CadastroEstab({ navigation }) {
     }
 
     const salvar = () => {
+        const unmaskCNPJ = cnpjRef?.current.getRawValue();
+        const unmaskTEL = telRef?.current.getRawValue();
+
         if (validar()) {
             console.log(nomeEstab)
             console.log(dono)
             console.log(endereco)
-            console.log(telefone)
-            console.log(cnpj)
+            console.log(unmaskTEL)
+            console.log(unmaskCNPJ)
             console.log(email)
             console.log(password)
             console.log(password1)
             console.log(descricao)
             Alert.alert('Estabelecimento cadastrado com sucesso!')
+            
         }
     }
 
@@ -175,83 +171,116 @@ export default function CadastroEstab({ navigation }) {
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : 'height'}
             style={css.container}
-            keyboardVerticalOffset={5}>
+            keyboardVerticalOffset={100}>
             <ScrollView >
                 <Text style={css.cadastro}>Cadastro de Estabelecimento</Text>
 
                 <View style={css.login_form}>
-                    <Input
-                        placeholder='Nome do estabelecimento'
-                        onChangeText={value => {
-                            setNomeEstab(value)
-                            setErrorNomeEstab(null)
-                        }}
-                        errorMessage={errorNomeEstab}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <Input
-                        placeholder='Nome do(a) responsável legal'
-                        onChangeText={value => {
-                            setDono(value)
-                            setErrorDono(null)
-                        }}
-                        errorMessage={errorDono}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <Input
-                        placeholder="Endereço"
-                        onChangeText={value => {
-                            setEndereco(value)
-                            setErrorEndereco(null)
-                        }}
-                        errorMessage={errorEndereco}
-                        returnKeyType="done"
-                        style={css.signup_input} />
+                    
+                    <Text style={css.namesInput}>Nome do Estabelecimento</Text>
 
-                    <View style={css.containerMask}>
-                        <TextInputMask
-                            placeholder="Celular ou Telefone"
-                            type={'cel-phone'}
-                            value={telefone}
-                            keyboardType="number-pad"
-                            options={{
-                                maskType: 'BRL',
-                                withDDD: true,
-                                dddMask: '(99) '
-                            }}
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='Nome do estabelecimento'
                             onChangeText={value => {
-                                setTelefone(value)
-                                setErrorTelefone(null)
+                                setNomeEstab(value)
+                                setErrorNomeEstab(null)
                             }}
                             returnKeyType="done"
-                            style={css.maskedInput} />
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorNomeEstab}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Nome do Responsável Legal</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='Nome do(a) responsável legal'
+                                  
+                            onChangeText={value => {
+                                setDono(value)
+                                setErrorDono(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorDono}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Endereço</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder="Endereço"
+                            onChangeText={value => {
+                                setEndereco(value)
+                                setErrorEndereco(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorEndereco}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Celular ou telefone</Text>
+
+                    <View style={css.inputArea}>
+                            <TextInputMask
+                                placeholder="Celular ou Telefone"
+                                type={'cel-phone'}
+                                value={telefone}
+                                keyboardType="number-pad"
+                                options={{
+                                    maskType: 'BRL',
+                                    withDDD: true,
+                                    dddMask: '(99) '
+                                }}
+                                onChangeText={value => {
+                                    setTelefone(value)
+                                    setErrorTelefone(null)
+                                }}
+                                returnKeyType="done"
+                                ref={telRef}
+                                style={css.maskedInput} />
                     </View>
 
                     <View>
                         <Text style={css.errorMessage}>{errorTelefone}</Text>
                     </View>
 
-                    <View style={css.containerMask}>
-                        <TextInputMask
-                            placeholder='CNPJ'
-                            type={'cnpj'}
-                            value={cnpj}
-                            keyboardType="number-pad"
-                            onChangeText={value => {
-                                setCNPJ(value)
-                                setErrorCNPJ(null)
-                            }}
-                            returnKeyType="done"
-                            ref={(ref) => cnpjField = ref}
-                            style={css.maskedInput}
-                        />
-                    </View>
+                    <Text style={css.namesInput}>CNPJ</Text>
+
+                    <View style={css.inputArea}>
+                            <TextInputMask
+                                placeholder='CNPJ'
+                                type={'cnpj'}
+                                value={cnpj}
+                                keyboardType="number-pad"
+                                onChangeText={value => {
+                                    setCNPJ(value)
+                                    setErrorCNPJ(null)
+                                }}
+                                returnKeyType="done"
+                                ref={cnpjRef}
+                                style={css.maskedInput}
+                            />
+                        </View>
 
                     <View>
                         <Text style={css.errorMessage}>{errorCNPJ}</Text>
                     </View>
 
-                    <Input
+                    <Text style={css.namesInput}>E-mail</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
                         placeholder='E-mail'
                         textContentType='emailAddress'
                         keyboardType='email-address'
@@ -262,21 +291,38 @@ export default function CadastroEstab({ navigation }) {
                             setEmail(value)
                             setErrorEmail(null)
                         }}
-                        errorMessage={errorEmail}
                         returnKeyType="done"
                         style={css.signup_input} />
-                    <Input
-                        placeholder='Senha'
-                        secureTextEntry={true}
-                        autoCapitalize='none'
-                        onChangeText={value => {
-                            setPassword(value)
-                            setErrorPassword(null)
-                        }}
-                        errorMessage={errorPassword}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <Input
+                    </View>
+                    
+                    <View>
+                        <Text style={css.errorMessage}>{errorEmail}</Text>
+                    </View>
+                    
+                    <Text style={css.namesInput}>Senha</Text>
+
+                    <View style = {css.inputArea}>
+                        <TextInput
+                            placeholder='Senha'
+                            secureTextEntry={true}
+                            autoCapitalize='none'
+                            onChangeText={value => {
+                                setPassword(value)
+                                setErrorPassword(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorPassword}</Text>
+                    </View>
+
+
+                    <Text style={css.namesInput}>Confirmação de senha</Text>
+
+                    <View style = {css.inputArea}>
+                    <TextInput
                         placeholder='Digite novamente a senha'
                         secureTextEntry={true}
                         autoCapitalize='none'
@@ -284,9 +330,9 @@ export default function CadastroEstab({ navigation }) {
                             setPassword1(value)
                             setErrorPassword1(null)
                         }}
-                        errorMessage={errorPassword1}
                         returnKeyType="done"
                         style={css.signup_input} />
+                    </View>
                     
                     <View>
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
@@ -349,10 +395,23 @@ export default function CadastroEstab({ navigation }) {
 
 const css = StyleSheet.create({
 
+    inputArea: {
+        backgroundColor: 'white',
+        borderColor: '#121212',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginLeft: 10,
+        paddingLeft: 12,
+        height: 30,
+        marginTop: 2,
+        justifyContent: 'center'
+      },
 
     namesInput: {
         fontWeight: 'bold',
-        paddingLeft: 12
+        paddingLeft: 10,
+        fontSize: 12,
+        marginTop: 5,
     },
 
     inputDetails: {
@@ -392,10 +451,8 @@ const css = StyleSheet.create({
         height: 40,
         fontSize: 12,
         color: 'grey',
-        borderBottomColor: '#999',
-        borderBottomWidth: 1,
-        borderStyle: 'solid',
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
+        width: '100%'
     },
 
     containerMask: {

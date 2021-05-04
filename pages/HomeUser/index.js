@@ -4,43 +4,50 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-function Feed() {
+
+const logout = (navigation) => {
+  navigation.reset({
+    index: 0,
+    routes: [{ name: "Login" }]
+  })
+
+}
+
+function Feed({ navigation }) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Feed!</Text>
-      {/*<TouchableOpacity style={css.senha_button}
-           onPress={() => logout()}>
-          <Text style={css.button_text}>Logout</Text>
-       </TouchableOpacity>*/}
+      <TouchableOpacity style={css.login_button}
+        onPress={() => logout(navigation)}>
+        <Text style={css.button_text}>Sair</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
 
 function Profile({ navigation }) {
-  const logout = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Home" }]
-    })
-
-  }
+  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <View>
-        <Text>Notifications!</Text>
-      </View>
+      
+        <Text>Profile!</Text>
+        <TouchableOpacity style={css.login_button}
+        onPress={() => logout(navigation)}>
+        <Text style={css.button_text}>Sair</Text>
+      </TouchableOpacity>
+      
     </View>
   );
 }
 
-function Notifications() {
+function Notifications({navigation}) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Notifications!</Text>
       <TouchableOpacity style={css.login_button}
-        onPress={() => logout()}>
-        <Text style={css.button_text}
-        >Sair</Text>
+        onPress={() => logout(navigation)}>
+        <Text style={css.button_text}>Sair</Text>
       </TouchableOpacity>
     </View>
   );

@@ -1,8 +1,7 @@
 import { Asset } from 'expo-asset';
 import { StatusBar } from 'expo-status-bar';
 import React, { Component, useState, useEffect } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Animated, Platform, Keyboard } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Animated, Platform, Keyboard, TextInput } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input, Text } from 'react-native-elements';
@@ -12,7 +11,7 @@ export default function Home({ navigation }) {
 
   const [offset] = useState(new Animated.ValueXY({ x: 0, y: 90 }))
   const [opacity] = useState(new Animated.Value(0))
-  const [logo] = useState(new Animated.ValueXY({x: 275, y: 155}))
+  const [logo] = useState(new Animated.ValueXY({ x: 275, y: 155 }))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorLogin, setErrorLogin] = useState(null)
@@ -31,14 +30,14 @@ export default function Home({ navigation }) {
 
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 500,        
+        duration: 500,
       })
     ]).start();
 
   }, []);
 
   function keyboardDidShow() {
-    
+
     Animated.parallel([
       Animated.timing(logo.x, {
         toValue: 120,
@@ -108,9 +107,9 @@ export default function Home({ navigation }) {
       behavior={Platform.OS == "ios" ? "padding" : 'height'}
       style={css.container}>
 
-      <View style = {css.logo_img}>
+      <View style={css.logo_img}>
         <Animated.Image
-          style = {{
+          style={{
             width: logo.x,
             height: logo.y,
           }}
@@ -119,54 +118,67 @@ export default function Home({ navigation }) {
 
 
       <Animated.View
-        style={[
-          css.login_form,
-          {
-            opacity: opacity,
-            transform: [
-              { translateY: offset.y }
-            ]
-          }
-        ]}
-      >
-        
-          <Input
+          style={[
+            css.login_form,
+            {
+              opacity: opacity,
+              transform: [
+                { translateY: offset.y }
+              ]
+            }
+          ]}
+        >
+        <View style={css.inputArea}>
+            <Ionicons name="mail-outline" size={20} style = {css.icon}/>
+
+          <TextInput
+
+            style={css.input}
             placeholder='E-mail'
-            leftIcon={{ type: 'font-awesome', name: 'envelope' }}
             textContentType='emailAddress'
             keyboardType='email-address'
             autoCapitalize='none'
             autoCompleteType='email'
-            value = {email}
-            onChangeText={ (texto) => {
+            value={email}
+            onChangeText={(texto) => {
               setEmail(texto)
               setErrorLogin(null)
             }
             } />
+        </View>
+
         <View style={css.inputArea}>
-          <Input
-            placeholder='Senha'            
+
+          <Ionicons name="lock-open-outline" size={20} />
+         
+          <TextInput
+            style={css.input}
+            placeholder='Senha'
             leftIcon={{ type: 'font-awesome', name: 'lock' }}
             secureTextEntry={hidePass}
             autoCapitalize='none'
-            value = {password}
-            onChangeText={ (texto1) => {
+            value={password}
+            onChangeText={(texto1) => {
               setPassword(texto1)
               setErrorLogin(null)
             }
             }
-            errorMessage={errorLogin}
+            
           />
 
           <TouchableOpacity style={css.icon}
             onPress={() => setHidePass(!hidePass)}>
             {hidePass ?
-              <Ionicons name="eye" size={30} />
+              <Ionicons name="eye" size={25} />
               :
-              <Ionicons name="eye-off" size={30} />
+              <Ionicons name="eye-off" size={25} />
             }
           </TouchableOpacity>
 
+        </View>
+
+        <View>
+          <Text style={css.errorMessage}>{errorLogin}</Text>
         </View>
 
         <TouchableOpacity style={css.login_button}
@@ -208,17 +220,34 @@ export default function Home({ navigation }) {
 }
 
 const css = StyleSheet.create({
-  
+
   inputArea: {
     flexDirection: 'row',
-    width: '85%',
+    backgroundColor: 'white',
+    borderBottomColor: '#121212',
+    borderBottomWidth: 1,
+    alignItems: 'center'
   },
 
-  icon:{
+  icon: {
     alignItems: 'center',
     justifyContent: 'center',
   },
- 
+
+  input: {
+    width: '85%',
+    height: 50,
+    color: 'black',
+    padding: 8
+  },
+
+  errorMessage: {
+    fontSize: 12,
+    color: "#f00",
+    marginLeft: 10,
+    alignSelf: 'flex-start',
+},
+
   estab_button: {
     width: 100,
     height: 30,
@@ -346,7 +375,7 @@ const css = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
 });

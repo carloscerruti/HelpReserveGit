@@ -16,12 +16,26 @@ const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={Home} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Recuperarsenha" component={Recuperarsenha} />
-        <Stack.Screen name="CadastroEstab" component={CadastroEstab} />
-        <Stack.Screen name="HomeUser" component={HomeUser} />
+      <Stack.Navigator /*screenOptions={{
+        headerShown: false
+      }}*/>
+      <Stack.Screen
+        name="Login"
+        component={Home}
+        options={{
+          headerStyle: {
+            backgroundColor: '#750606',
+          },
+          headerTintColor: '#fff',
+          headerTitleAlign:'center',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+        <Stack.Screen name="Signup" component={Signup} options={{ title: 'Cadastro de usuário' }} />
+        <Stack.Screen name="Recuperarsenha" component={Recuperarsenha} options={{ title: 'Recuperação de senha' }} />
+        <Stack.Screen name="CadastroEstab" component={CadastroEstab} options={{ title: 'Cadastro de estabelecimento' }} />
+        <Stack.Screen name="HomeUser" component={HomeUser} options={{ title: 'Entrada' }}/>
       </Stack.Navigator>
     
   );

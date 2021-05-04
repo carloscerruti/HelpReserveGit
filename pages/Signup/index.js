@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Text, Input } from 'react-native-elements';
@@ -23,15 +23,15 @@ export default function Signup({ navigation }) {
     const [errorPassword, setErrorPassword] = useState(null)
     const [errorPassword1, setErrorPassword1] = useState(null)
     const [errorCadastro, setErrorCadastro] = useState(null)
-    const [isSelected, setSelected] = useState(false)
+    const [valueGenero, setValueGenero] = useState(null);
     const [ErrorGenero, setErrorGenero] = useState(false)
     const cpfRef = useRef(null)
     const telRef = useRef(null)
-    const [value, setValue] = React.useState(null);
+    
 
 
     const validar = () => {
-        
+
         let error = false
         setErrorNome(null)
         setErrorTelefone(null)
@@ -48,7 +48,7 @@ export default function Signup({ navigation }) {
 
         const cpfIsValid = cpfRef?.current.isValid();
 
-        if (nome == null) {
+        if (!nome) {
             setErrorNome("Preencha seu nome corretamente")
             error = true
         }
@@ -60,7 +60,7 @@ export default function Signup({ navigation }) {
             }
         }
 
-        if (telefone == null) {
+        if (!telefone) {
             setErrorTelefone("Preencha seu telefone corretamente")
             error = true
         }
@@ -72,7 +72,7 @@ export default function Signup({ navigation }) {
             }
         }
 
-        if (unmaskCPF == null || !cpfIsValid) {
+        if (!unmaskCPF || !cpfIsValid) {
             setErrorCPF("Preencha seu CPF corretamente")
             error = true
         }
@@ -89,7 +89,7 @@ export default function Signup({ navigation }) {
             error = true
         }
 
-        if (password == null) {
+        if (!password) {
             setErrorPassword("Preencha sua senha corretamente")
             error = true
         }
@@ -108,28 +108,28 @@ export default function Signup({ navigation }) {
             }
         }
 
-        if (value == null){
-            setErrorGenero("Selecione um genero")
+        if (!valueGenero) {
+            setErrorGenero("Selecione um gênero")
             error = true
         }
 
         return !error
-        
-    }    
+
+    }
 
     const salvar = () => {
 
         const unmaskCPF = cpfRef?.current.getRawValue();
         const unmaskTEL = telRef?.current.getRawValue();
 
-        if (validar({navigation})) {
+        if (validar({ navigation })) {
             console.log(nome)
             console.log(unmaskTEL)
             console.log(unmaskCPF)
             console.log(email)
             console.log(password)
-            console.log(password1)            
-            console.log(value)
+            console.log(password1)
+            console.log(valueGenero)
             Alert.alert('Usuário cadastrado com sucesso!')
         }
     }
@@ -139,39 +139,49 @@ export default function Signup({ navigation }) {
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : 'height'}
             style={css.container}
-            keyboardVerticalOffset={5}>
+            keyboardVerticalOffset={70}>
             <ScrollView >
                 <Text style={css.cadastre_se}>Cadastre-se</Text>
 
                 <View style={css.login_form}>
-                    <Input
-                        placeholder='Nome Completo'
-                        autoCapitalize = 'sentences'
-                        onChangeText={value => {
-                            setNome(value)
-                            setErrorNome(null)
-                        }}
-                        errorMessage={errorNome}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                
-                    <View style={css.containerMask}>
+
+                    <Text style={css.namesInput}>Nome</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='Nome Completo'
+                            autoCapitalize='sentences'
+                            onChangeText={value => {
+                                setNome(value)
+                                setErrorNome(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorNome}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Celular ou Telefone</Text>
+
+                    <View style={css.inputArea}>
                         <TextInputMask
-                            placeholder="Telefone"
+                            placeholder="Celular ou Telefone"
                             type={'cel-phone'}
-                            value={telefone}
                             keyboardType="number-pad"
                             options={{
                                 maskType: 'BRL',
                                 withDDD: true,
                                 dddMask: '(99) '
                             }}
-                            onChangeText={value => {
-                                setTelefone(value)
+                            value = {telefone}
+                            onChangeText={(telefone) => {
+                                setTelefone(telefone)
                                 setErrorTelefone(null)
                             }}
                             returnKeyType="done"
-                            ref = {telRef}
+                            ref={telRef}
                             style={css.maskedInput} />
                     </View>
 
@@ -179,7 +189,9 @@ export default function Signup({ navigation }) {
                         <Text style={css.errorMessage}>{errorTelefone}</Text>
                     </View>
 
-                    <View style={css.containerMask}>
+                    <Text style={css.namesInput}>CPF</Text>
+
+                    <View style={css.inputArea}>
                         <TextInputMask
                             placeholder='CPF'
                             type={'cpf'}
@@ -190,7 +202,7 @@ export default function Signup({ navigation }) {
                                 setErrorCPF(null)
                             }}
                             returnKeyType="done"
-                            ref = {cpfRef}
+                            ref={cpfRef}
                             style={css.maskedInput}
                         />
                     </View>
@@ -199,53 +211,76 @@ export default function Signup({ navigation }) {
                         <Text style={css.errorMessage}>{errorCPF}</Text>
                     </View>
 
-                    <Input
-                        placeholder='E-mail'
-                        textContentType='emailAddress'
-                        keyboardType='email-address'
-                        autoCapitalize='none'
-                        autoCorrect={false}
-                        autoCompleteType='email'
-                        onChangeText={value => {
-                            setEmail(value)
-                            setErrorEmail(null)
-                        }}
-                        errorMessage={errorEmail}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <Input
-                        placeholder='Senha'
-                        secureTextEntry={true}
-                        autoCapitalize='none'
-                        onChangeText={value => {
-                            setPassword(value)
-                            setErrorPassword(null)
-                        }}
-                        errorMessage={errorPassword}
-                        returnKeyType="done"
-                        style={css.signup_input} />
-                    <Input
-                        placeholder='Digite novamente a senha'
-                        secureTextEntry={true}
-                        autoCapitalize='none'
-                        onChangeText={value => {
-                            setPassword1(value)
-                            setErrorPassword1(null)
-                        }}
-                        errorMessage={errorPassword1}
-                        returnKeyType="done"
-                        style={css.signup_input} />
+                    <Text style={css.namesInput}>E-mail</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='E-mail'
+                            textContentType='emailAddress'
+                            keyboardType='email-address'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            autoCompleteType='email'
+                            onChangeText={value => {
+                                setEmail(value)
+                                setErrorEmail(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorEmail}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Senha</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='Senha'
+                            secureTextEntry={true}
+                            autoCapitalize='none'
+                            value = {password}
+                            onChangeText={value => {
+                                setPassword(value)
+                                setErrorPassword(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
+
+                    <View>
+                        <Text style={css.errorMessage}>{errorPassword}</Text>
+                    </View>
+
+                    <Text style={css.namesInput}>Confirmação de senha</Text>
+
+                    <View style={css.inputArea}>
+                        <TextInput
+                            placeholder='Digite novamente a senha'
+                            secureTextEntry={true}
+                            autoCapitalize='none'
+                            value={password1}
+                            onChangeText={value => {
+                                setPassword1(value)
+                                setErrorPassword1(null)
+                            }}
+                            returnKeyType="done"
+                            style={css.signup_input} />
+                    </View>
 
                     <View>
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
                     </View>
 
-                    <RadioButton.Group onValueChange={newValue => setValue(newValue)} 
-                        value={value}>
-                        <View style={css.radioGenero}>                            
-                            <RadioButton value="F" color="red"/>
-                            <Text>Feminino</Text>                        
-                            <RadioButton value="M" color="red"/>
+                    <Text style={css.namesInput}>Gênero</Text>
+
+                    <RadioButton.Group onValueChange={newValue => setValueGenero(newValue)}
+                        value={(valueGenero)}>
+                        <View style={css.radioGenero}>
+                            <RadioButton value="F" color="red" />
+                            <Text>Feminino</Text>
+                            <RadioButton value="M" color="red" />
                             <Text>Masculino</Text>
                         </View>
                     </RadioButton.Group>
@@ -268,10 +303,29 @@ export default function Signup({ navigation }) {
 
 const css = StyleSheet.create({
 
-    radioGenero:{
+    inputArea: {
+        backgroundColor: 'white',
+        borderColor: '#121212',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginLeft: 10,
+        paddingLeft: 12,
+        height: 30,
+        marginTop: 2,
+        justifyContent: 'center'
+    },
+
+    namesInput: {
+        fontWeight: 'bold',
+        paddingLeft: 10,
+        fontSize: 12,
+        marginTop: 5,
+    },
+
+    radioGenero: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'left'
+        marginLeft: 5,
     },
 
     cadastre_se: {
@@ -293,10 +347,8 @@ const css = StyleSheet.create({
         flexGrow: 1,
         height: 40,
         fontSize: 12,
-        borderBottomColor: '#999',
-        borderBottomWidth: 1,
-        borderStyle: 'solid',
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-start',
+        width: '100%'
     },
 
     containerMask: {
