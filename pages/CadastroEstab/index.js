@@ -1,12 +1,9 @@
-import { Asset } from 'expo-asset';
-import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState } from 'react';
 import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform, Linking, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
-import { CheckBox, Text, Input } from 'react-native-elements';
+import { CheckBox, Text } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
-import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 

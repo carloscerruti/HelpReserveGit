@@ -5,6 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
 import { RadioButton } from 'react-native-paper';
+import axios from 'axios';
+import DatePicker from 'react-native-datepicker';
 
 const Stack = createStackNavigator();
 
@@ -25,9 +27,10 @@ export default function Signup({ navigation }) {
     const [errorCadastro, setErrorCadastro] = useState(null)
     const [valueGenero, setValueGenero] = useState(null);
     const [ErrorGenero, setErrorGenero] = useState(false)
+    const [datanasc, setDataNasc] = useState(null)
+    const [errorDatanasc, setErrorDataNasc] = useState(null)
     const cpfRef = useRef(null)
     const telRef = useRef(null)
-    
 
 
     const validar = () => {
@@ -96,7 +99,7 @@ export default function Signup({ navigation }) {
 
         if (password != null) {
             if (password.length < 8) {
-                setErrorPassword("Sua senha deve conter pelo menos 8 caracteres")
+                setErrorPassword("Sua senha deve conter pelo menos 8 caracteres com letras e números")
                 error = true
             }
 
@@ -112,9 +115,7 @@ export default function Signup({ navigation }) {
             setErrorGenero("Selecione um gênero")
             error = true
         }
-
         return !error
-
     }
 
     const salvar = () => {
@@ -122,15 +123,33 @@ export default function Signup({ navigation }) {
         const unmaskCPF = cpfRef?.current.getRawValue();
         const unmaskTEL = telRef?.current.getRawValue();
 
-        if (validar({ navigation })) {
-            console.log(nome)
-            console.log(unmaskTEL)
-            console.log(unmaskCPF)
-            console.log(email)
-            console.log(password)
-            console.log(password1)
-            console.log(valueGenero)
-            Alert.alert('Usuário cadastrado com sucesso!')
+        if (validar({ navigation })) { 
+            /* 
+            console.log({
+                nome,
+                unmaskTEL,
+                unmaskCPF,
+                password,
+                valueGenero
+            })   */
+                        
+            axios.post('http://localhost:4545/cad_user', {
+                nome: nome,
+                telefone: unmaskTEL,
+                cpf: unmaskCPF,
+                email: email,
+                password: password,
+                genero: valueGenero,
+            }).then((response) => {
+                console.log('Usuário cadastrado com sucesso!');
+                Alert.alert('Usuário cadastrado com sucesso!');
+               
+            })
+                .catch((error) => {
+                    //console.log(error.response.data.message);
+                    Alert.alert("Erro ao realizar cadastro");     
+                    console.log("Erro ao realizar cadastro");               
+                })           
         }
     }
 
@@ -233,7 +252,7 @@ export default function Signup({ navigation }) {
                         <Text style={css.errorMessage}>{errorEmail}</Text>
                     </View>
 
-                    <Text style={css.namesInput}>Senha</Text>
+                   <Text style={css.namesInput}>Senha</Text>
 
                     <View style={css.inputArea}>
                         <TextInput
@@ -252,6 +271,7 @@ export default function Signup({ navigation }) {
                     <View>
                         <Text style={css.errorMessage}>{errorPassword}</Text>
                     </View>
+                        
 
                     <Text style={css.namesInput}>Confirmação de senha</Text>
 

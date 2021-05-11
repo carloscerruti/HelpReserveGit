@@ -1,11 +1,8 @@
-import { Asset } from 'expo-asset';
-import { StatusBar } from 'expo-status-bar';
-import React, { Component, useState, useEffect } from 'react';
-import { Alert, TouchableOpacity, StyleSheet, View, Image, KeyboardAvoidingView, Animated, Platform, Keyboard, TextInput } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Input, Text } from 'react-native-elements';
+import React, { useState, useEffect } from 'react';
+import { LogBox ,YellowBox ,TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Animated, Platform, Keyboard, TextInput } from 'react-native';
+import { Text } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 export default function Home({ navigation }) {
 
@@ -18,9 +15,13 @@ export default function Home({ navigation }) {
   const [hidePass, setHidePass] = useState(true)
 
   useEffect(() => {
+    
+    //LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
 
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
+
+    
 
     Animated.parallel([
       Animated.spring(offset.y, {
@@ -69,12 +70,18 @@ export default function Home({ navigation }) {
     let error = false
     setErrorLogin(null)
 
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    /*const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
     if (!re.test(String(email).toLowerCase()) || email == '' || password == '') {
       setErrorLogin("Usuário ou senha incorreto")
       error = true
+    }*/
+
+    if (email == '' || password == ''){
+      setErrorLogin("Usuário ou senha incorreto")
+      error = true
     }
+      
 
     return !error
   }
@@ -92,12 +99,27 @@ export default function Home({ navigation }) {
   }
 
   const entrar = () => {
+    
     if (validar()) {
-      console.log(email)
-      console.log(password)
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "HomeUser" }]
+     
+      console.log({
+        email,
+        password
+      })     
+    
+      axios.post('http://192.168.0.19:4545/user',({
+        email: email,
+        password: password,
+      })).then((response) => {
+        console.log(response.data)      
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "HomeUser" }]
+        })                
+      })
+      .catch(error => {
+        console.log(error.response);
+        setErrorLogin("Usuário ou senha incorreto")
       })
     }
   }
@@ -115,8 +137,6 @@ export default function Home({ navigation }) {
           }}
           source={require('../../assets/helpreserve.png')} />
       </View>
-
-
       <Animated.View
           style={[
             css.login_form,
