@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import 'react-native-gesture-handler';
 import { Alert, TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -6,7 +7,8 @@ import { Text, Input } from 'react-native-elements';
 import { TextInputMask } from 'react-native-masked-text';
 import { RadioButton } from 'react-native-paper';
 import axios from 'axios';
-import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const Stack = createStackNavigator();
 
@@ -133,7 +135,7 @@ export default function Signup({ navigation }) {
                 valueGenero
             })   */
                         
-            axios.post('http://localhost:4545/cad_user', {
+            axios.post('http://192.168.0.19:4545/cad_user', {
                 nome: nome,
                 telefone: unmaskTEL,
                 cpf: unmaskCPF,
@@ -152,6 +154,34 @@ export default function Signup({ navigation }) {
                 })           
         }
     }
+
+    /*const [date, setDate] = useState(new Date(1598051730000));
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+  
+    const onChange = (event, selectedDate) => {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate);
+    };
+  
+    const showMode = (currentMode) => {
+      setShow(true);
+      setMode(currentMode);
+    };
+  
+    const showDatepicker = () => {
+      showMode('date');
+    };*/
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+      {label: 'Apple', value: 'apple'},
+      {label: 'Banana', value: 'banana'}
+    ]);
+
+    
 
     return (
 
@@ -292,6 +322,24 @@ export default function Signup({ navigation }) {
                     <View>
                         <Text style={css.errorMessage}>{errorCadastro}</Text>
                     </View>
+
+                    {/*<View>
+                        <TouchableOpacity style={css.login_button}
+                            onPress={showDatepicker}>
+                            <Text style={css.button_text}>Data</Text>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={date}
+                            mode={mode}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onChange}
+                        />
+                    )}*/}
 
                     <Text style={css.namesInput}>Gênero</Text>
 

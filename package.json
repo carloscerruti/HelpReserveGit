@@ -8,9 +8,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "@expo/vector-icons": "^12.0.4",
+    "@expo/vector-icons": "^12.0.5",
+    "@react-native-community/datetimepicker": "^3.4.7",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/masked-viewn": "react-native-community/masked-view",
+    "@react-native-community/picker": "^1.8.1",
     "@react-native-picker/picker": "1.9.2",
     "@react-navigation/bottom-tabs": "^5.11.10",
     "@react-navigation/native": "^5.9.4",
@@ -20,6 +22,7 @@
     "cors": "^2.8.5",
     "cpf-cnpj-validator": "^1.0.3",
     "expo": "~40.0.0",
+    "expo-font": "^9.1.0",
     "expo-image-picker": "^10.1.4",
     "expo-linear-gradient": "^9.1.0",
     "expo-splash-screen": "~0.8.0",
@@ -35,6 +38,7 @@
     "react-masked-text": "^0.4.1",
     "react-native": "~0.63.4",
     "react-native-datepicker": "^1.7.2",
+    "react-native-dropdown-picker": "^5.1.11",
     "react-native-elements": "^3.3.2",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-hide-show-password-input": "^1.2.0",
@@ -47,6 +51,8 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "~2.15.0",
     "react-native-splash-screen": "^3.2.0",
+    "react-native-stars": "^1.2.2",
+    "react-native-swiper": "^1.6.0",
     "react-native-unimodules": "~0.12.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "~0.13.12"

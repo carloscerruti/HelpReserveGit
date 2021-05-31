@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { LogBox ,YellowBox ,TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Animated, Platform, Keyboard, TextInput } from 'react-native';
+import 'react-native-gesture-handler';
+import { TouchableOpacity, StyleSheet, View, KeyboardAvoidingView, Animated, Platform, Keyboard, TextInput, LogBox } from 'react-native';
 import { Text } from 'react-native-elements';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-export default function Home({ navigation }) {
+export default function LoginEstab({ navigation }) {
 
   const [offset] = useState(new Animated.ValueXY({ x: 0, y: 90 }))
   const [opacity] = useState(new Animated.Value(0))
   const [logo] = useState(new Animated.ValueXY({ x: 275, y: 155 }))
-  const [email, setEmail] = useState('')
+  const [cnpj, setCNPJ] = useState('')
   const [password, setPassword] = useState('')
   const [errorLogin, setErrorLogin] = useState(null)
   const [hidePass, setHidePass] = useState(true)
 
   useEffect(() => {
     
-    //LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
 
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow)
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide)
@@ -70,28 +72,13 @@ export default function Home({ navigation }) {
     let error = false
     setErrorLogin(null)
 
-    /*const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-    if (!re.test(String(email).toLowerCase()) || email == '' || password == '') {
-      setErrorLogin("Usuário ou senha incorreto")
-      error = true
-    }*/
-
-    if (email == '' || password == ''){
-      setErrorLogin("Usuário ou senha incorreto")
+    if (cnpj == '' || password == ''){
+      setErrorLogin("CNPJ ou senha incorreto")
       error = true
     }
       
 
     return !error
-  }
-
-  const cadastrar = () => {
-    navigation.navigate('Signup')
-  }
-
-  const forgetPassword = () => {
-    navigation.navigate('Recuperarsenha')
   }
 
   const cadastroEstab = () => {
@@ -103,23 +90,23 @@ export default function Home({ navigation }) {
     if (validar()) {
      
       console.log({
-        email,
+        cnpj,
         password
       })     
     
-      axios.post('http://192.168.0.19:4545/user',({
-        email: email,
+      axios.post('http://192.168.0.19:4545/estabel',({
+        cnpj: cnpj,
         password: password,
       })).then((response) => {
-        console.log(response.data)      
+        console.log(response.data)
         navigation.reset({
           index: 0,
-          routes: [{ name: "HomeUser" }]
+          routes: [{ name: "HomeEstab" }]
         })                
       })
       .catch(error => {
-        console.log(error.response);
-        setErrorLogin("Usuário ou senha incorreto")
+        console.log(error.response.data.message);
+        setErrorLogin("CNPJ ou senha incorreta")
       })
     }
   }
@@ -127,7 +114,7 @@ export default function Home({ navigation }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : 'height'}
-      style={css.container}>
+      style={css.container}>        
 
       <View style={css.logo_img}>
         <Animated.Image
@@ -135,7 +122,7 @@ export default function Home({ navigation }) {
             width: logo.x,
             height: logo.y,
           }}
-          source={require('../../assets/helpreserve.png')} />
+          source={require('../assets/helpreserve.png')} />
       </View>
       <Animated.View
           style={[
@@ -149,19 +136,17 @@ export default function Home({ navigation }) {
           ]}
         >
         <View style={css.inputArea}>
-            <Ionicons name="mail-outline" size={20} style = {css.icon}/>
+            <Ionicons name="person-circle-outline" size={20} style = {css.icon}/>
 
           <TextInput
 
             style={css.input}
-            placeholder='E-mail'
-            textContentType='emailAddress'
-            keyboardType='email-address'
+            placeholder='CNPJ'
+            keyboardType='number-pad'
             autoCapitalize='none'
-            autoCompleteType='email'
-            value={email}
+            value={cnpj}
             onChangeText={(texto) => {
-              setEmail(texto)
+              setCNPJ(texto)
               setErrorLogin(null)
             }
             } />
@@ -174,7 +159,6 @@ export default function Home({ navigation }) {
           <TextInput
             style={css.input}
             placeholder='Senha'
-            leftIcon={{ type: 'font-awesome', name: 'lock' }}
             secureTextEntry={hidePass}
             autoCapitalize='none'
             value={password}
@@ -189,9 +173,9 @@ export default function Home({ navigation }) {
           <TouchableOpacity style={css.icon}
             onPress={() => setHidePass(!hidePass)}>
             {hidePass ?
-              <Ionicons name="eye" size={25} />
+              <Icon name="eye" size={25} />
               :
-              <Ionicons name="eye-off" size={25} />
+              <Icon name="eye-off" size={25} />
             }
           </TouchableOpacity>
 
@@ -207,21 +191,7 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
 
         <View source={css.view_cadastro}>
-          <Text style={css.msg_cadastro}>Não é cadastrado?⠀
-              <Text style={css.click_cadastro}
-              onPress={() => cadastrar()}>
-              Cadastre-se
-                </Text>
-          </Text>
-        </View>
-        <View>
-          <Text style={css.click_senha}
-            onPress={() => forgetPassword()}>
-            Esqueci minha senha
-                </Text>
-        </View>
 
-        <View source={css.estab_container}>
           <Text style={css.msg_cadastro_estab}>
             Possui um estabelecimento?
               </Text>
@@ -353,7 +323,7 @@ const css = StyleSheet.create({
     color: 'black',
     fontSize: 15,
     fontWeight: 'normal',
-    marginTop: 30,
+    marginTop: 10,
     alignSelf: 'center'
   },
 
@@ -385,6 +355,15 @@ const css = StyleSheet.create({
 
   click_senha: {
     color: 'red',
+    fontWeight: 'bold',
+    marginTop: 8,
+    alignSelf: 'center',
+    fontSize: 15,
+  },
+
+  click_estab: {
+    paddingTop: 15,
+    color: '#750606',
     fontWeight: 'bold',
     marginTop: 10,
     alignSelf: 'center',

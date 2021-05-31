@@ -1,9 +1,8 @@
-import { Asset } from 'expo-asset';
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React, { Component, useState } from 'react';
 import { Alert, TouchableOpacity, StyleSheet, View, Image, ImageBackground, KeyboardAvoidingView, Platform, Linking } from 'react-native';
 import { Input, Text } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
 
 export default function Recuperarsenha({ navigation }) {
@@ -27,8 +26,19 @@ export default function Recuperarsenha({ navigation }) {
 
     const validacao = () => {
         if (validar()) {
-            console.log(email)
-            Alert.alert("Senha enviada para seu endereço de email")
+           
+            axios.post('http://192.168.0.19:4545/recup_senha',({
+                email: email,
+              })).then((response) => {
+                console.log(response.data)      
+                Alert.alert("Senha enviada para seu endereço de email")  
+                console.log('Enviado com sucesso para ' + email)     
+              })
+              .catch(error => {
+                console.log(error.response);
+                setErrorEmail("Email Inválido")
+              })
+            
         }
     }
 
@@ -62,10 +72,11 @@ export default function Recuperarsenha({ navigation }) {
                     <Text style={css.button_text}>Enviar</Text>
                 </TouchableOpacity>
 
-
-                <Text style={css.ou}>
-                    OU
-                        </Text>
+                
+                    <Text style={css.ou}>
+                        OU
+                    </Text>
+                    
 
 
                 <View>
@@ -86,6 +97,8 @@ const css = StyleSheet.create({
     lightbg: {
         backgroundColor: '#fff',
     },
+
+    
 
     recup_senha: {
         fontSize: 30,
